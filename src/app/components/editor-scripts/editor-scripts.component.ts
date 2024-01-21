@@ -25,7 +25,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     protected override toaster: ToastrService,
   ) {
     super(document, toaster);
-  }/*
+  } /*
 
   handleScriptDownload(): void {
     this.handleScriptSave();

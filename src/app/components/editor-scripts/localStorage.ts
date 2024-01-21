@@ -308,16 +308,19 @@ export class LocalStorage {
             // If we're here, there's at least one object in the database's object store (i.e., the database is not empty).
             this.dbGlobals.empty = false;
             this.data = {
-              ...this.data, ...{
-              [cursor.value.ID]: {
-                id: cursor.value.ID,
-                //date: new Date(cursor.value.date * 1000),
-                date: cursor.value.date,
-                name: cursor.value.name,
-                size: cursor.value.size,
-                text: cursor.value.text,
-                type: cursor.value.type,
-            }}};
+              ...this.data,
+              ...{
+                [cursor.value.ID]: {
+                  id: cursor.value.ID,
+                  //date: new Date(cursor.value.date * 1000),
+                  date: cursor.value.date,
+                  name: cursor.value.name,
+                  size: cursor.value.size,
+                  text: cursor.value.text,
+                  type: cursor.value.type,
+                },
+              },
+            };
             // Move to the next object in the object store.
             cursor.continue();
           } else {
