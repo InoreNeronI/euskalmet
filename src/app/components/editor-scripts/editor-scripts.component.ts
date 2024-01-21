@@ -27,8 +27,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     super(document, toaster);
   } /*
 
-  handleScriptDownload(): void {
-    this.handleScriptSave();
+  handleFileDownload(): void {
+    this.handleFileSave();
     // @see https://stackoverflow.com/a/30800715/16711967
     const dlAnchorElem: HTMLElement = document.getElementById('downloadScriptButton');
     dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + this.selectedFile.text);
@@ -36,9 +36,9 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     dlAnchorElem.click();
   }*/
 
-  handleScriptSave(): void {}
+  handleFileSave(): void {}
 
-  handleScriptSelection(id: number): void {
+  handleFileSelection(id: number): void {
     for (let i: number = 0, file: any; (file = this.files[i]); i++) {
       if (file.id === id) {
         this.selectedFile = file;
@@ -51,7 +51,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     this.selectLanguageElement.value = model.getLanguageId();
   }
 
-  handleScriptsPurge(): void {
+  handleFilesPurge(): void {
     this.deleteDB();
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
@@ -99,6 +99,6 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
 
   uploadAndShowData(evt: Event | any): void {
     this.handleStart();
-    this.handleFileSelection(evt).then((): void => this.showData(500, this.handleStop.bind(this)));
+    this.handleFileUploadSelection(evt).then((): void => this.showData(500, this.handleStop.bind(this)));
   }
 }

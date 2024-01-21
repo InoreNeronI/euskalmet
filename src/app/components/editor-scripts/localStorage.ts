@@ -155,11 +155,11 @@ export class LocalStorage {
 
   // ---------------------------------------------------------------------------------------------------
 
-  async handleUpload(file: File, text: string): Promise<void> {
+  async handleFileUpload(file: File, text: string): Promise<void> {
     const db = this.dbGlobals.db;
     let transaction;
     if (!db) {
-      console.log('db (i.e., this.dbGlobals.db) is null in handleFileSelection()');
+      console.log('db (i.e., this.dbGlobals.db) is null in handleFileUpload()');
       return;
     } // if
 
@@ -169,18 +169,18 @@ export class LocalStorage {
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
       // try
-      console.log('db.transaction exception in handleFileSelection() - ' + ex.message);
+      console.log('db.transaction exception in handleFileUpload() - ' + ex.message);
       return;
     } // catch
 
     transaction.onerror = (evt: Event | any): void => {
-      console.log('transaction.onerror fired in handleFileSelection() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+      console.log('transaction.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
     };
     transaction.onabort = (): void => {
-      console.log('transaction.onabort fired in handleFileSelection()');
+      console.log('transaction.onabort fired in handleFileUpload()');
     };
     transaction.oncomplete = (): void => {
-      console.log('transaction.oncomplete fired in handleFileSelection()');
+      console.log('transaction.oncomplete fired in handleFileUpload()');
     };
 
     try {
@@ -198,24 +198,24 @@ export class LocalStorage {
       // There's at least one object in the database's object store. This info (i.e., this.dbGlobals.empty) is used in displayDB().
       addRequest.onsuccess = (): void => {
         this.dbGlobals.empty = false;
-        console.log('addRequest.onsuccess fired in handleFileSelection()');
+        console.log('addRequest.onsuccess fired in handleFileUpload()');
       };
       addRequest.onerror = (evt: Event | any): void => {
-        console.log('addRequest.onerror fired in handleFileSelection() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        console.log('addRequest.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
     } catch (ex: any) {
       // try
-      console.log('Transaction and/or put() exception in handleFileSelection() - ' + ex.message);
+      console.log('Transaction and/or put() exception in handleFileUpload() - ' + ex.message);
       return;
     } // catch
     // An attempt has already been made to select file(s) so hide the 'file picker' dialog box.
     //this.document.getElementById('fileSelector').style.display = 'none';
-  } // handleUpload
+  } // handleFileUpload
 
   // ---------------------------------------------------------------------------------------------------
 
-  async handleFileSelection(evt: Event | any): Promise<void> {
-    console.log('handleFileSelection()');
+  async handleFileUploadSelection(evt: Event | any): Promise<void> {
+    console.log('handleFileUploadSelection()');
     // The files selected by the user (as a FileList object).
     const files = evt.target.files;
     if (!files) {
@@ -235,7 +235,7 @@ export class LocalStorage {
           signal,
         });
         if (response.ok) {
-          await this.handleUpload(file, await response.text());
+          await this.handleFileUpload(file, await response.text());
         } else {
           // network error in the 4xx–5xx range
           throw new Error(`${response.status} ${response.statusText}`);
@@ -245,7 +245,7 @@ export class LocalStorage {
         console.log(error);
       }
     } // for
-  } // handleFileSelection
+  } // handleFileUploadSelection
 
   // ---------------------------------------------------------------------------------------------------
 

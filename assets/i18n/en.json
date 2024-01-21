@@ -10,11 +10,11 @@
   "LANGUAGE": "Language",
   "LIGHT": "Light",
   "LOGO": "Logo",
-  "PURGE": "Purge scripts",
+  "PURGE": "Purge files",
   "SAVE": "Save",
   "Select editor language": "Select editor language",
   "Select editor theme": "Select editor theme",
   "SPANISH": "Spanish",
   "TOGGLE_THEME": "Toggle theme",
-  "UPLOAD": "Upload file"
+  "UPLOAD": "Upload file(s)"
 }

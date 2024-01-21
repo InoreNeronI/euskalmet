@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-lg p-0" role="menu">
   <div class="container-fluid">
-    <div class="main-nav-menu order-0">
+    <div class="main-nav-menu order-0 position-absolute">
       <div class="dropup">
         <button
           type="button"
-          class="btn btn-link m-0 p-0"
+          class="btn btn-link d-none m-0 p-0"
           id="dropdownScriptsButton"
           data-bs-auto-close="false"
           data-bs-toggle="dropdown"
@@ -19,7 +19,7 @@
         </button>
         <ul class="dropdown-menu text-center" aria-labelledby="dropdownScriptsButton">
           <li class="nav-item" *ngFor="let file of files">
-            <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleScriptSelection(file.id)">{{ file.name }}</a>
+            <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleFileSelection(file.id)">{{ file.name }}</a>
           </li>
         </ul>
       </div>
@@ -35,7 +35,7 @@
       </label>
       <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-2 p-0" id="saveScriptButton" (click)="handleScriptSave()">
+    <button type="button" class="btn btn-link m-0 order-2 p-0" id="saveScriptButton" (click)="handleFileSave()">
       <img
         class="bi-2x d-inline-block"
         src="https://material-icons.github.io/material-icons/svg/save/baseline.svg"
@@ -43,7 +43,7 @@
         title="{{ 'SAVE' | translate }}"
       /></button
     ><!--
-    <a class="btn btn-link m-0 order-2 p-0" id="downloadScriptButton" (click)="handleScriptDownload()">
+    <a class="btn btn-link m-0 order-2 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
       <img
         class="bi-2x d-inline-block"
         src="https://material-icons.github.io/material-icons/svg/download/baseline.svg"
@@ -51,7 +51,7 @@
         title="{{ 'DOWNLOAD' | translate }}"
       />
     </a>-->
-    <button type="button" class="btn btn-link m-0 order-3 p-0" id="deleteScriptsButton" (click)="handleScriptsPurge()">
+    <button type="button" class="btn btn-link m-0 order-3 p-0" id="deleteScriptsButton" (click)="handleFilesPurge()">
       <img
         class="bi-2x d-inline-block"
         src="https://material-icons.github.io/material-icons/svg/delete_forever/baseline.svg"
