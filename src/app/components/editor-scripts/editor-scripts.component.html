@@ -5,7 +5,7 @@
         <button
           type="button"
           class="btn btn-link d-none m-0 p-0"
-          id="dropdownScriptsButton"
+          id="dropdownFilesButton"
           data-bs-auto-close="false"
           data-bs-toggle="dropdown"
           aria-expanded="false"
@@ -17,7 +17,7 @@
             title="{{ 'FILES' | translate }}"
           />
         </button>
-        <ul class="dropdown-menu text-center" aria-labelledby="dropdownScriptsButton">
+        <ul class="dropdown-menu text-center" aria-labelledby="dropdownFilesButton">
           <li class="nav-item" *ngFor="let file of files">
             <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleFileSelection(file.id)">{{ file.name }}</a>
           </li>
@@ -35,7 +35,7 @@
       </label>
       <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-2 p-0" id="saveScriptButton" (click)="handleFileSave()">
+    <button type="button" class="btn btn-link m-0 order-2 p-0" id="saveScriptButton" (click)="handleFileSelectionSave()">
       <img
         class="bi-2x d-inline-block"
         src="https://material-icons.github.io/material-icons/svg/save/baseline.svg"
@@ -51,7 +51,7 @@
         title="{{ 'DOWNLOAD' | translate }}"
       />
     </a>-->
-    <button type="button" class="btn btn-link m-0 order-3 p-0" id="deleteScriptsButton" (click)="handleFilesPurge()">
+    <button type="button" class="btn btn-link m-0 order-3 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
       <img
         class="bi-2x d-inline-block"
         src="https://material-icons.github.io/material-icons/svg/delete_forever/baseline.svg"
@@ -59,5 +59,19 @@
         title="{{ 'PURGE' | translate }}"
       />
     </button>
+    <div class="modal fade" id="deleteFilesModal" tabindex="-1" aria-labelledby="deleteFilesModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title fs-5" id="deleteFilesModalLabel">{{ 'Are you sure?' | translate }}</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'CLOSE' | translate }}</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="handleFilesPurge()">{{ 'PURGE' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>

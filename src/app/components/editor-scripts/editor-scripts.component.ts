@@ -36,8 +36,6 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     dlAnchorElem.click();
   }*/
 
-  handleFileSave(): void {}
-
   handleFileSelection(id: number): void {
     for (let i: number = 0, file: any; (file = this.files[i]); i++) {
       if (file.id === id) {
@@ -47,15 +45,24 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     }
     const model: editor.ITextModel = editor.getModels()[0];
     editor.setModelLanguage(model, this.selectedFile.type.replace('application/', ''));
-    editor.getEditors()[0].setValue(this.selectedFile.text);
     this.selectLanguageElement.value = model.getLanguageId();
+    editor.getEditors()[0].setValue(this.selectedFile.text);
+  }
+
+  handleFileSelectionSave(): void {
+    this.selectedFile.date = Date.now();
+    this.selectedFile.text = editor.getEditors()[0].getValue();
+    this.updateDB(this.selectedFile);
+    this.data[this.selectedFile.id].date = this.selectedFile.date;
+    this.data[this.selectedFile.id].text = this.selectedFile.text;
+    this.files = Object.values(this.data);
   }
 
   handleFilesPurge(): void {
     this.deleteDB();
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
-    this.document.querySelector('#dropdownScriptsButton + ul').classList.remove('show');
+    this.document.querySelector('#dropdownFilesButton + ul').classList.remove('show');
     this.openDB();
     this.populateDB();
   }
@@ -79,7 +86,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   ngAfterViewInit(): void {
     if (this.requiredFeaturesSupported()) {
       this.brandingImageElement = this.document.querySelector('.navbar-brand img');
-      this.loadingImageElement = this.document.querySelector('#dropdownScriptsButton img');
+      this.loadingImageElement = this.document.querySelector('#dropdownFilesButton img');
       this.selectLanguageElement = this.document.getElementById('language-select');
       this.handleStart();
       this.openDB();

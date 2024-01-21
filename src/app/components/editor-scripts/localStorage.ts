@@ -358,7 +358,7 @@ export class LocalStorage {
       // Note that we already checked for the availability of the deleteDatabase() method in the above feature detection code.
       const deleteRequest: IDBOpenDBRequest = this.window.indexedDB.deleteDatabase(this.dbGlobals.name);
 
-      deleteRequest.onerror = (evt: Event | any) => {
+      deleteRequest.onerror = (evt: Event | any): void => {
         console.log('deleteRequest.onerror fired in deleteDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
       deleteRequest.onsuccess = (): void => {
@@ -372,6 +372,55 @@ export class LocalStorage {
     } catch (ex: any) {
       // try
       console.log('Exception in deleteDB() - ' + ex.message);
+    } // catch
+  } // deleteDB
+
+  // ---------------------------------------------------------------------------------------------------
+
+  updateDB(file: any): void {
+    console.log('updateDB()');
+    // This normally gets instantly blown away by the next this.displayMessage().
+    this.displayMessage('Your request has been queued.');
+
+    const db: IDBDatabase = this.dbGlobals.db;
+    let transaction: IDBTransaction;
+
+    if (!db) {
+      this.displayMessage("There's no database to display.");
+      console.log('db (i.e., this.dbGlobals.db) is null in updateDB()');
+      return;
+    } // if
+
+    try {
+      // This is either successful or it throws an exception. Note that the ternary operator is for browsers that only support the READ_ONLY value.
+      // @ts-ignore
+      transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
+    } catch (ex: any) {
+      // try
+      console.log('db.transaction() exception in updateDB() - ' + ex.message);
+      return;
+    } // catch
+
+    try {
+      const objectStore: IDBObjectStore = transaction.objectStore(this.dbGlobals.storeName);
+      const updateRequest: IDBRequest = objectStore.put({
+        ID: file.id,
+        date: file.date,
+        name: file.name,
+        size: file.size,
+        text: file.text,
+        type: file.type,
+      });
+
+      updateRequest.onerror = (evt: Event | any): void => {
+        console.log('updateRequest.onerror fired in updateDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+      };
+      updateRequest.onsuccess = (evt: Event | any): void => {
+        this.displayMessage('Database updated successfully');
+      };
+    } catch (ex: any) {
+      // try
+      console.log('Exception in updateDB() - ' + ex.message);
     } // catch
   } // deleteDB
 }

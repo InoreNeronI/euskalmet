@@ -2,16 +2,18 @@
 import * as Popper from '@popperjs/core/lib';
 import Collapse from 'bootstrap/js/src/collapse';
 import Dropdown from 'bootstrap/js/src/dropdown';
+import Modal from 'bootstrap/js/src/modal';
 import Tab from 'bootstrap/js/src/tab';
 import './theme';
 
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-bs-toggle="collapse"]').forEach((collapse) => new Collapse(collapse, {}));
   document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach((dropdown) => new Dropdown(dropdown, {}));
+  document.querySelectorAll('[data-bs-toggle="modal"]').forEach((modal) => new Modal(modal, {}));
   document.querySelectorAll('[data-bs-toggle="tab"]').forEach((tab) => new Tab(tab, {}));
   // @see https://stackoverflow.com/a/42401686
   const menuBrand = document.querySelector('.navbar-brand');
-  const menuScriptsCollapse = Dropdown.getOrCreateInstance(document.getElementById('dropdownScriptsButton'));
+  const menuScriptsCollapse = Dropdown.getOrCreateInstance(document.getElementById('dropdownFilesButton'));
   menuBrand.addEventListener('click', () => menuScriptsCollapse.toggle());
   const menuToggle = document.getElementById('navbarContent');
   const menuToggler = document.querySelector('.navbar-toggler');
