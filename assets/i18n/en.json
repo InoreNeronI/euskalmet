@@ -1,0 +1,18 @@
+{
+  "AUTO": "Automatic",
+  "BASQUE": "Basque",
+  "DARK": "Dark",
+  "DESCRIPTION": "Code editing application with different languages and themes.",
+  "ENGLISH": "English",
+  "HOME": "",
+  "LANGUAGE": "Language",
+  "LIGHT": "Light",
+  "LOGO": "Logo",
+  "PURGE": "Purge scripts",
+  "SCRIPTS": "Scripts",
+  "Select editor language": "Select editor language",
+  "Select editor theme": "Select editor theme",
+  "SPANISH": "Spanish",
+  "TOGGLE_THEME": "Toggle theme",
+  "UPLOAD": "Upload file"
+}

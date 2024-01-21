@@ -1,0 +1,47 @@
+#fileSelector {
+  width: fit-content;
+}
+
+// @see https://stackoverflow.com/a/25628613/16711967
+
+.loading-arrow {
+  animation: rotation 0.75s infinite linear;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+@-moz-keyframes rotation {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes rotation {
+  from {
+    -o-transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(359deg);
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

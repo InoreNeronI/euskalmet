@@ -1,8 +1,20 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
-import { routes } from './app.routes';
+import { LazyTranslateLoader } from './loaders/translate.loader';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: LazyTranslateLoader,
+          deps: [HttpClient],
+        },
+      }),
+    ),
+    provideHttpClient(),
+  ],
 };

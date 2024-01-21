@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg p-0" role="menu">
+  <div class="container-fluid">
+    <div class="main-nav-menu order-0">
+      <label for="fileSelector" class="btn btn-link form-label m-0 p-0" id="fileSelectorLabel" style="cursor: pointer">
+        <img
+          class="bi-2x d-inline-block"
+          src="https://material-icons.github.io/material-icons/svg/upload/baseline.svg"
+          alt="{{ 'UPLOAD' | translate }}"
+          title="{{ 'UPLOAD' | translate }}"
+        />
+      </label>
+      <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
+    </div>
+    <div class="main-nav-menu order-1">
+      <div class="dropup">
+        <button
+          type="button"
+          class="btn btn-link m-0 p-0"
+          id="dropdownScriptsButton"
+          data-bs-auto-close="false"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            class="bi-2x d-inline-block"
+            src="https://material-icons.github.io/material-icons/svg/code/baseline.svg"
+            alt="{{ 'SCRIPTS' | translate }}"
+            title="{{ 'SCRIPTS' | translate }}"
+          />
+          {{ 'HOME' | translate }}
+        </button>
+        <ul class="dropdown-menu text-center" aria-labelledby="dropdownScriptsButton">
+          <li class="nav-item" *ngFor="let file of files">
+            <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleScriptSelection(file.id)">{{ file.name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button type="button" class="btn btn-link m-0 order-2 p-0" id="deleteScriptsButton" (click)="handleScriptsPurge()">
+      <img
+        class="bi-2x d-inline-block"
+        src="https://material-icons.github.io/material-icons/svg/delete_forever/baseline.svg"
+        alt="{{ 'PURGE' | translate }}"
+        title="{{ 'PURGE' | translate }}"
+      />
+    </button>
+  </div>
+</nav>

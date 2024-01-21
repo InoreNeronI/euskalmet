@@ -1,0 +1,18 @@
+{
+  "AUTO": "Automatikoa",
+  "BASQUE": "Euskara",
+  "DARK": "Iluna",
+  "DESCRIPTION": "Lengoaia eta itxura ezberdinekin kodea editatzeko aplikazioa.",
+  "ENGLISH": "Ingelesa",
+  "HOME": "",
+  "LANGUAGE": "Hizkuntza",
+  "LIGHT": "Argia",
+  "LOGO": "Logoa",
+  "PURGE": "Garbitu scriptak",
+  "SCRIPTS": "Scriptak",
+  "Select editor language": "Hautatu editorearen lengoaia",
+  "Select editor theme": "Hautatu editorearen itxura",
+  "SPANISH": "Gaztelania",
+  "TOGGLE_THEME": "Aldatu gaia",
+  "UPLOAD": "Fitxategia igo"
+}

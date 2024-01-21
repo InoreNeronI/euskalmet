@@ -1,0 +1,105 @@
+/* You can add global styles to this file, and also import other style files */
+// Bootstrap & toaster styles
+@import '../../node_modules/bootstrap/scss/mixins/border-radius';
+@import 'bootstrap';
+@import 'ngx-toastr/toastr-bs5-alert';
+
+// Bootstrap Color-mode styles
+:root {
+  &[data-bs-theme='dark'] {
+    a,
+    button,
+    footer,
+    .navbar-brand,
+    .nav-link {
+      img {
+        filter: invert(1);
+      }
+    }
+  } /*
+    &[data-bs-theme='auto'] {
+  } */
+  &[data-bs-theme='light'] {
+    a,
+    button,
+    footer,
+    .navbar-brand,
+    .nav-link {
+      img {
+        filter: invert(0);
+      }
+    }
+  }
+}
+
+// Custom styles
+:root,
+body,
+main {
+  height: 100%;
+}
+
+main {
+  a {
+    cursor: pointer;
+  }
+  .bi {
+    width: 1rem;
+    height: 1rem;
+    fill: currentcolor;
+  }
+  .bi-2x {
+    width: 2rem;
+    height: 2rem;
+    fill: currentcolor;
+  }
+  .bi-3x {
+    width: 2.3333rem;
+    height: 2.3333rem;
+    fill: currentcolor;
+  }
+  header {
+    .color-modes {
+      .dropdown-menu {
+        padding: 0.25rem;
+        li + li {
+          margin-top: 0.125rem;
+        }
+      }
+      .dropdown-item {
+        @include border-radius(0.25rem);
+      }
+      .active {
+        font-weight: 600;
+        .bi {
+          display: block !important;
+        }
+      }
+    }
+    .dropdown-menu {
+      min-width: 2rem;
+    }
+    .form-floating {
+      width: fit-content;
+    }
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 1.5px;
+    }
+  }
+
+  // Particles canvas
+  section {
+    .canvas-background {
+      position: absolute;
+      z-index: -1;
+    }
+    .container {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+}

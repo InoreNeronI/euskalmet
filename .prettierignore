@@ -1,0 +1,4 @@
+# Add files here to ignore them from prettier formatting
+.parcel-cache
+assets/.dist
+node_modules

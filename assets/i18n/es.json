@@ -1,0 +1,18 @@
+{
+  "AUTO": "Automático",
+  "BASQUE": "Vasco",
+  "DARK": "Oscuro",
+  "DESCRIPTION": "Aplicación de edición de código fuente con diferentes lenguajes y apariencias.",
+  "ENGLISH": "Inglés",
+  "HOME": "",
+  "LANGUAGE": "Idioma",
+  "LIGHT": "Claro",
+  "LOGO": "Logo",
+  "PURGE": "Purgar scripts",
+  "SCRIPTS": "Scripts",
+  "Select editor language": "Seleccionar idioma del editor",
+  "Select editor theme": "Seleccionar apariencia del editor",
+  "SPANISH": "Español",
+  "TOGGLE_THEME": "Alternar apariencia",
+  "UPLOAD": "Subir archivo"
+}
