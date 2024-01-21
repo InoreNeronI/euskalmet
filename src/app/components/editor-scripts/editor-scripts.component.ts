@@ -25,10 +25,21 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     protected override toaster: ToastrService,
   ) {
     super(document, toaster);
-  }
+  }/*
+
+  handleScriptDownload(): void {
+    this.handleScriptSave();
+    // @see https://stackoverflow.com/a/30800715/16711967
+    const dlAnchorElem: HTMLElement = document.getElementById('downloadScriptButton');
+    dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + this.selectedFile.text);
+    dlAnchorElem.setAttribute('download', this.selectedFile.name);
+    dlAnchorElem.click();
+  }*/
+
+  handleScriptSave(): void {}
 
   handleScriptSelection(id: number): void {
-    for (let i: number = 0, file: any; (file = this.data[i]); i++) {
+    for (let i: number = 0, file: any; (file = this.files[i]); i++) {
       if (file.id === id) {
         this.selectedFile = file;
         break;
@@ -42,7 +53,6 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
 
   handleScriptsPurge(): void {
     this.deleteDB();
-    this.data = [];
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
     this.document.querySelector('#dropdownScriptsButton + ul').classList.remove('show');
