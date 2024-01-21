@@ -30,8 +30,8 @@
           {{ 'HOME' | translate }}
         </button>
         <ul class="dropdown-menu text-center" aria-labelledby="dropdownScriptsButton">
-          <li class="nav-item" *ngFor="let file of files">
-            <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleScriptSelection(file.id)">{{ file.name }}</a>
+          <li class="nav-item" *ngFor="let item of data">
+            <a class="dropdown-item" [class.active]="selectedFile.id === item.id" (click)="handleScriptSelection(item.id)">{{ item.name }}</a>
           </li>
         </ul>
       </div>

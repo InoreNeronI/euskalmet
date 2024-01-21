@@ -2,6 +2,7 @@ import { DOCUMENT, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from './localStorage';
 import { EditorCustomizationsComponent } from '../editor-customizations/editor-customizations.component';
 
@@ -14,18 +15,20 @@ import { EditorCustomizationsComponent } from '../editor-customizations/editor-c
 })
 export class EditorScriptsComponent extends LocalStorage implements AfterViewInit {
   brandingImageElement: HTMLImageElement;
-  files: any = [];
   loadingImageElement: HTMLImageElement;
   selectLanguageElement: any;
   // @see https://stackoverflow.com/a/69778692
   selectedFile: any = { id: 0 };
 
-  constructor(@Inject(DOCUMENT) public override document: Document) {
-    super(document);
+  constructor(
+    @Inject(DOCUMENT) protected override document: Document,
+    protected override toaster: ToastrService,
+  ) {
+    super(document, toaster);
   }
 
   handleScriptSelection(id: number): void {
-    for (let i: number = 0, file: any; (file = this.files[i]); i++) {
+    for (let i: number = 0, file: any; (file = this.data[i]); i++) {
       if (file.id === id) {
         this.selectedFile = file;
         break;
@@ -39,7 +42,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
 
   handleScriptsPurge(): void {
     this.deleteDB();
-    this.files = [];
+    this.data = [];
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
     this.document.querySelector('#dropdownScriptsButton + ul').classList.remove('show');
@@ -80,13 +83,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   showData(timeout: number, cb: Function): void {
-    setTimeout((): void => {
-      this.displayDB();
-    }, timeout / 10);
-    setTimeout((): void => {
-      this.files = Object.values(JSON.parse(JSON.stringify(this.data)));
-      cb();
-    }, timeout);
+    setTimeout(this.displayDB.bind(this), timeout / 10);
+    setTimeout(cb, timeout);
   }
 
   uploadAndShowData(evt: Event | any): void {

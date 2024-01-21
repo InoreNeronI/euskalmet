@@ -1,12 +1,16 @@
 // @see https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/samples/hh779017(v=vs.85)
+import { ToastrService } from 'ngx-toastr';
+
 export class LocalStorage {
+  protected data: any = [];
   private dbGlobals: any = {}; // Store all indexedDB related objects in a global object called 'dbGlobals'.
-  protected data: Object = {};
   protected document: Document;
+  protected toaster: ToastrService;
   private window: Window;
 
-  constructor(document: Document) {
+  constructor(document: Document, toaster: ToastrService) {
     this.document = document;
+    this.toaster = toaster;
     // @see https://stackoverflow.com/a/52620181/16711967
     this.window = this.document.defaultView;
     // The database object will eventually be stored here.
@@ -57,7 +61,7 @@ export class LocalStorage {
   // ---------------------------------------------------------------------------------------------------
 
   displayMessage(message: string): void {
-    console.log('###' + message);
+    this.toaster.success(message);
   } // displayMessage
 
   // ---------------------------------------------------------------------------------------------------
@@ -65,7 +69,7 @@ export class LocalStorage {
   openDB(): void {
     console.log('openDB()');
     // Normally, this will instantly blown away by the next this.displayMessage().
-    this.displayMessage('<p>Your request has been queued.</p>');
+    this.displayMessage('Your request has been queued.');
 
     if (!this.window.indexedDB.open) {
       console.log('this.window.indexedDB.open is null in openDB()');
@@ -95,10 +99,11 @@ export class LocalStorage {
   openDB_onblocked(evt: Event | any): void {
     console.log('openDB_onupgradeneeded()');
 
-    let message: string = '<p>The database is blocked - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode) + '</p>';
-    message += '</p>If this page is open in other browser windows, close these windows.</p>';
-
-    this.displayMessage(message);
+    this.displayMessage(
+      'The database is blocked - error code: ' +
+        (evt.target.error ? evt.target.error : evt.target.errorCode) +
+        '. If this page is open in other browser windows, close these windows.',
+    );
   }
 
   // ---------------------------------------------------------------------------------------------------
@@ -106,7 +111,7 @@ export class LocalStorage {
   openDB_onupgradeneeded(evt: Event | any): void {
     console.log('openDB_onupgradeneeded()');
     // Normally, this will instantly be blown away be the next this.displayMessage().
-    this.displayMessage('<p>Your request has been queued.</p>');
+    this.displayMessage('Your request has been queued.');
     // A successfully opened database results in a database object, which we place in our global IndexedDB variable.
     const db = (this.dbGlobals.db = evt.target.result);
 
@@ -124,7 +129,7 @@ export class LocalStorage {
       return;
     }
     // A means of communicating this information to the openDB_onsuccess handler.
-    this.dbGlobals.message = '<p>The database has been created.</p>';
+    this.dbGlobals.message = 'The database has been created.';
   } // openDB_onupgradeneeded
 
   // ---------------------------------------------------------------------------------------------------
@@ -132,7 +137,7 @@ export class LocalStorage {
   openDB_onsuccess(evt: Event | any): void {
     console.log('openDB_onsuccess()');
     // Normally, this will be instantly blown away by the next this.displayMessage().
-    this.displayMessage('<p>Your request has been queued.</p>');
+    this.displayMessage('Your request has been queued.');
     // A successfully opened database results in a database object, which we place in our global IndexedDB variable.
     const db = (this.dbGlobals.db = evt.target.result);
 
@@ -141,7 +146,7 @@ export class LocalStorage {
       return;
     } // if
 
-    this.dbGlobals.message += '<p>The database has been opened.</p>';
+    this.dbGlobals.message += 'The database has been opened.';
     this.displayMessage(this.dbGlobals.message);
     // The message has been delivered to the user, 'zero' it out just to be safe.
     this.dbGlobals.message = '';
@@ -213,7 +218,7 @@ export class LocalStorage {
     // The files selected by the user (as a FileList object).
     const files = evt.target.files;
     if (!files) {
-      this.displayMessage('<p>At least one selected file is invalid - do not select any folders.</p><p>Please reselect and try again.</p>');
+      this.displayMessage('At least one selected file is invalid - do not select any folders. Please reselect and try again.');
       return;
     }
     const controller: AbortController = new AbortController();
@@ -247,16 +252,14 @@ export class LocalStorage {
     console.log('populateDB()');
 
     if (!this.dbGlobals.db) {
-      this.displayMessage("<p>The database hasn't been opened/created yet.</p>");
+      this.displayMessage("The database hasn't been opened/created yet.");
       console.log('db (i.e., this.dbGlobals.db) is null in populateDB()');
       return;
     }
     // Now that we have a valid database, allow the user to put file(s) in it.
     this.document.getElementById('fileSelector').style.display = 'block';
 
-    let message = '<p>Using the below <strong>Browse</strong> button, select one or more files to store in the database.</p>';
-    message += "<p>Then, click the <strong>Display DB</strong> button to display what's currently in the database.</p>";
-    this.displayMessage(message);
+    this.displayMessage('Using the below upload button, select one or more files to store in the database.');
   } // populateDB
 
   // ---------------------------------------------------------------------------------------------------
@@ -268,7 +271,7 @@ export class LocalStorage {
     let transaction: IDBTransaction;
 
     if (!db) {
-      this.displayMessage("<p>There's no database to display.</p>");
+      this.displayMessage("There's no database to display.");
       console.log('db (i.e., this.dbGlobals.db) is null in displayDB()');
       return;
     } // if
@@ -303,27 +306,22 @@ export class LocalStorage {
           if (cursor) {
             // If we're here, there's at least one object in the database's object store (i.e., the database is not empty).
             this.dbGlobals.empty = false;
-            this.data = {
-              ...this.data,
-              ...{
-                [cursor.value.ID]: {
-                  id: cursor.value.ID,
-                  date: new Date(cursor.value.date * 1000),
-                  name: cursor.value.name,
-                  size: cursor.value.size,
-                  text: cursor.value.text,
-                  type: cursor.value.type,
-                },
-              },
-            };
-            // Move to the next object (that is, file) in the object store.
+            this.data.push({
+              id: cursor.value.ID,
+              date: new Date(cursor.value.date * 1000),
+              name: cursor.value.name,
+              size: cursor.value.size,
+              text: cursor.value.text,
+              type: cursor.value.type,
+            });
+            // Move to the next object in the object store.
             cursor.continue();
           } else {
             this.displayMessage('cursorRequest.onsuccess: Empty file list');
           }
 
           if (this.dbGlobals.empty) {
-            this.displayMessage("<p>The database is empty &ndash; there's nothing to display.</p>");
+            this.displayMessage("The database is empty &ndash; there's nothing to display.");
           }
         }; // cursorRequest.onsuccess
       } catch (innerException: any) {
@@ -341,7 +339,7 @@ export class LocalStorage {
   deleteDB(): void {
     console.log('deletedDB()');
     // This normally gets instantly blown away by the next this.displayMessage().
-    this.displayMessage('<p>Your request has been queued.</p>');
+    this.displayMessage('Your request has been queued.');
 
     try {
       if (this.dbGlobals.db) {
@@ -359,7 +357,7 @@ export class LocalStorage {
         this.dbGlobals.db = null;
         this.dbGlobals.empty = true;
         this.dbGlobals.message = '';
-        this.displayMessage('<p>The database has been deleted.</p>');
+        this.displayMessage('The database has been deleted.');
       }; // deleteRequest.onsuccess
     } catch (ex: any) {
       // try
