@@ -154,7 +154,7 @@ export default (config: webpack.Configuration) => {
     }),
   );
   // Remove the existing css loader rule
-  const cssRuleIdx = config?.module?.rules?.findIndex((rule: any) => rule.test?.toString().includes(':css'));
+  const cssRuleIdx: number = config?.module?.rules?.findIndex((rule: any) => rule.test?.toString().includes(':css'));
   if (cssRuleIdx !== -1) {
     config?.module?.rules?.splice(cssRuleIdx!, 1);
   }

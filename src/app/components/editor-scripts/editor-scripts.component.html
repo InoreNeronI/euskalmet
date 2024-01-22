@@ -12,49 +12,51 @@
         >
           <img
             class="bi-2x d-inline-block"
-            src="https://material-icons.github.io/material-icons/svg/code/baseline.svg"
+            src="https://icons.getbootstrap.com/assets/icons/code-slash.svg"
             alt="{{ 'FILES' | translate }}"
             title="{{ 'FILES' | translate }}"
           />
         </button>
         <ul class="dropdown-menu text-center" aria-labelledby="dropdownFilesButton">
           <li class="nav-item" *ngFor="let file of files">
-            <a class="dropdown-item" [class.active]="selectedFile.id === file.id" (click)="handleFileSelection(file.id)">{{ file.name }}</a>
+            <a class="dropdown-item" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">{{
+              file.name
+            }}</a>
           </li>
         </ul>
       </div>
     </div>
-    <div class="main-nav-menu order-1">
+    <button type="button" class="btn btn-link m-0 order-1 p-0" id="saveScriptButton" (click)="handleFileSelectionSave()">
+      <img
+        class="bi-2x d-inline-block"
+        src="https://icons.getbootstrap.com/assets/icons/floppy.svg"
+        alt="{{ 'SAVE' | translate }}"
+        title="{{ 'SAVE' | translate }}"
+      />
+    </button>
+    <div class="main-nav-menu order-2">
       <label for="fileSelector" class="btn btn-link form-label m-0 p-0" id="fileSelectorLabel" style="cursor: pointer">
         <img
           class="bi-2x d-inline-block"
-          src="https://material-icons.github.io/material-icons/svg/upload/baseline.svg"
+          src="https://icons.getbootstrap.com/assets/icons/upload.svg"
           alt="{{ 'UPLOAD' | translate }}"
           title="{{ 'UPLOAD' | translate }}"
         />
       </label>
       <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-2 p-0" id="saveScriptButton" (click)="handleFileSelectionSave()">
+    <button type="button" class="btn btn-link m-0 order-3 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
       <img
         class="bi-2x d-inline-block"
-        src="https://material-icons.github.io/material-icons/svg/save/baseline.svg"
-        alt="{{ 'SAVE' | translate }}"
-        title="{{ 'SAVE' | translate }}"
-      /></button
-    ><!--
-    <a class="btn btn-link m-0 order-2 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
-      <img
-        class="bi-2x d-inline-block"
-        src="https://material-icons.github.io/material-icons/svg/download/baseline.svg"
-        alt="{{ 'DOWNLOAD' | translate }}"
-        title="{{ 'DOWNLOAD' | translate }}"
+        src="https://icons.getbootstrap.com/assets/icons/file-earmark-arrow-down.svg"
+        alt="{{ 'DOWNLOAD_SELECTED_FILE' | translate }}"
+        title="{{ 'DOWNLOAD_SELECTED_FILE' | translate }}"
       />
-    </a>-->
-    <button type="button" class="btn btn-link m-0 order-3 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
+    </button>
+    <button type="button" class="btn btn-link m-0 order-4 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
       <img
         class="bi-2x d-inline-block"
-        src="https://material-icons.github.io/material-icons/svg/delete_forever/baseline.svg"
+        src="https://icons.getbootstrap.com/assets/icons/trash3.svg"
         alt="{{ 'PURGE' | translate }}"
         title="{{ 'PURGE' | translate }}"
       />
@@ -63,11 +65,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title fs-5" id="deleteFilesModalLabel">{{ 'Are you sure?' | translate }}</h3>
+            <h3 class="modal-title fs-5" id="deleteFilesModalLabel">{{ 'ARE_YOU_SURE' | translate }}</h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'CLOSE' | translate }}</button>
+            <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">{{ 'CLOSE' | translate }}</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="handleFilesPurge()">{{ 'PURGE' | translate }}</button>
           </div>
         </div>

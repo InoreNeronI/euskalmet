@@ -24,8 +24,6 @@ export class LocalStorage {
     this.dbGlobals.version = 1;
     // The name of the database's object store. Each object in the object store is a file object.
     this.dbGlobals.storeName = 'fileObjects';
-    // When useful, contains one or more HTML strings to display to the user in the 'messages' DIV box.
-    this.dbGlobals.message = '';
     // Indicates whether or not there's one or more records in the database object store. The object store is initially empty, so set this to true.
     this.dbGlobals.empty = true;
   }
@@ -46,13 +44,13 @@ export class LocalStorage {
       case 'ms-wwa:':
         break;
       default:
-        this.document.body.innerHTML = '<h3>IndexedDB pages must be served via the http:// or https:// protocol - resolve this issue and try again.</h3>';
+        this.toaster.error('IndexedDB pages must be served via the http:// or https:// protocol - resolve this issue and try again.');
         return false;
     } // switch
 
     // @ts-ignore
     if (!this.document.getElementById('fileSelector').files) {
-      this.document.body.innerHTML = '<h3>File API is not fully supported - upgrade your browser to the latest version.</h3>';
+      this.toaster.error('File API is not fully supported - upgrade your browser to the latest version.');
       return false;
     }
 
@@ -61,19 +59,11 @@ export class LocalStorage {
 
   // ---------------------------------------------------------------------------------------------------
 
-  displayMessage(message: string): void {
-    this.toaster.success(message);
-  } // displayMessage
-
-  // ---------------------------------------------------------------------------------------------------
-
   openDB(): void {
-    console.log('openDB()');
-    // Normally, this will instantly blown away by the next this.displayMessage().
-    this.displayMessage('Your request has been queued.');
+    console.log('openDB(): Open database has been queued...');
 
     if (!this.window.indexedDB.open) {
-      console.log('this.window.indexedDB.open is null in openDB()');
+      this.toaster.info('window.indexedDB.open is null in openDB()');
       return;
     } // if
 
@@ -82,7 +72,7 @@ export class LocalStorage {
       const openRequest: IDBOpenDBRequest = this.window.indexedDB.open(this.dbGlobals.name, this.dbGlobals.version);
       // Some browsers may only support the errorCode property.
       openRequest.onerror = (evt: Event | any): void => {
-        console.log('openRequest.onerror fired in openDB() - error: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        this.toaster.error('openRequest.onerror fired in openDB() - error: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
       // Called if the database is opened via another process, or similar.
       openRequest.onblocked = this.openDB_onblocked.bind(this);
@@ -91,16 +81,16 @@ export class LocalStorage {
       // Attempts to open an existing database (that has a correctly matching version value).
       openRequest.onsuccess = this.openDB_onsuccess.bind(this);
     } catch (ex: any) {
-      console.log('this.window.indexedDB.open exception in openDB() - ' + ex.message);
+      this.toaster.error('window.indexedDB.open exception in openDB() - ' + ex.message);
     }
   } // openDB
 
   // ---------------------------------------------------------------------------------------------------
 
   openDB_onblocked(evt: Event | any): void {
-    console.log('openDB_onupgradeneeded()');
+    console.log('openDB_onblocked()');
 
-    this.displayMessage(
+    this.toaster.error(
       'The database is blocked - error code: ' +
         (evt.target.error ? evt.target.error : evt.target.errorCode) +
         '. If this page is open in other browser windows, close these windows.',
@@ -110,14 +100,12 @@ export class LocalStorage {
   // ---------------------------------------------------------------------------------------------------
 
   openDB_onupgradeneeded(evt: Event | any): void {
-    console.log('openDB_onupgradeneeded()');
-    // Normally, this will instantly be blown away be the next this.displayMessage().
-    this.displayMessage('Your request has been queued.');
+    console.log('openDB_onupgradeneeded(): Open database onupgradeneeded has been queued...');
     // A successfully opened database results in a database object, which we place in our global IndexedDB variable.
     const db = (this.dbGlobals.db = evt.target.result);
 
     if (!db) {
-      console.log('db (i.e., evt.target.result) is null in openDB_onupgradeneeded()');
+      this.toaster.error('Database is null in openDB_onupgradeneeded()');
       return;
     } // if
 
@@ -126,31 +114,25 @@ export class LocalStorage {
       // Thus, files of the same name can be stored in the database.
       db.createObjectStore(this.dbGlobals.storeName, { keyPath: 'ID', autoIncrement: true });
     } catch (ex: any) {
-      console.log('Exception in openDB_onupgradeneeded() - ' + ex.message);
+      this.toaster.error('Exception in openDB_onupgradeneeded() - ' + ex.message);
       return;
     }
-    // A means of communicating this information to the openDB_onsuccess handler.
-    this.dbGlobals.message = 'The database has been created.';
+    this.toaster.success('The database has been created.');
   } // openDB_onupgradeneeded
 
   // ---------------------------------------------------------------------------------------------------
 
   openDB_onsuccess(evt: Event | any): void {
-    console.log('openDB_onsuccess()');
-    // Normally, this will be instantly blown away by the next this.displayMessage().
-    this.displayMessage('Your request has been queued.');
+    console.log('openDB_onsuccess(): Open database onsuccess has been queued...');
     // A successfully opened database results in a database object, which we place in our global IndexedDB variable.
     const db = (this.dbGlobals.db = evt.target.result);
 
     if (!db) {
-      console.log('db (i.e., evt.target.result) is null in openDB_onsuccess()');
+      this.toaster.error('Database is null in openDB_onsuccess()');
       return;
     } // if
 
-    this.dbGlobals.message += 'The database has been opened.';
-    this.displayMessage(this.dbGlobals.message);
-    // The message has been delivered to the user, 'zero' it out just to be safe.
-    this.dbGlobals.message = '';
+    this.toaster.success('The database has been opened.');
   } // openDBsuccess
 
   // ---------------------------------------------------------------------------------------------------
@@ -159,7 +141,7 @@ export class LocalStorage {
     const db = this.dbGlobals.db;
     let transaction;
     if (!db) {
-      console.log('db (i.e., this.dbGlobals.db) is null in handleFileUpload()');
+      this.toaster.error('Database is null in handleFileUpload()');
       return;
     } // if
 
@@ -169,18 +151,18 @@ export class LocalStorage {
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
       // try
-      console.log('db.transaction exception in handleFileUpload() - ' + ex.message);
+      this.toaster.error('db.transaction exception in handleFileUpload() - ' + ex.message);
       return;
     } // catch
 
     transaction.onerror = (evt: Event | any): void => {
-      console.log('transaction.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+      this.toaster.error('transaction.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
     };
     transaction.onabort = (): void => {
-      console.log('transaction.onabort fired in handleFileUpload()');
+      this.toaster.error('transaction.onabort fired in handleFileUpload()');
     };
     transaction.oncomplete = (): void => {
-      console.log('transaction.oncomplete fired in handleFileUpload()');
+      this.toaster.info('transaction.oncomplete fired in handleFileUpload()');
     };
 
     try {
@@ -198,18 +180,16 @@ export class LocalStorage {
       // There's at least one object in the database's object store. This info (i.e., this.dbGlobals.empty) is used in displayDB().
       addRequest.onsuccess = (): void => {
         this.dbGlobals.empty = false;
-        console.log('addRequest.onsuccess fired in handleFileUpload()');
+        this.toaster.info('addRequest.onsuccess fired in handleFileUpload()');
       };
       addRequest.onerror = (evt: Event | any): void => {
-        console.log('addRequest.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        this.toaster.error('addRequest.onerror fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
     } catch (ex: any) {
       // try
-      console.log('Transaction and/or put() exception in handleFileUpload() - ' + ex.message);
+      this.toaster.error('Transaction and/or put() exception in handleFileUpload() - ' + ex.message);
       return;
     } // catch
-    // An attempt has already been made to select file(s) so hide the 'file picker' dialog box.
-    //this.document.getElementById('fileSelector').style.display = 'none';
   } // handleFileUpload
 
   // ---------------------------------------------------------------------------------------------------
@@ -219,7 +199,7 @@ export class LocalStorage {
     // The files selected by the user (as a FileList object).
     const files = evt.target.files;
     if (!files) {
-      this.displayMessage('At least one selected file is invalid - do not select any folders. Please reselect and try again.');
+      this.toaster.error('At least one selected file is invalid - do not select any folders. Please reselect and try again.');
       return;
     }
     const controller: AbortController = new AbortController();
@@ -238,30 +218,14 @@ export class LocalStorage {
           await this.handleFileUpload(file, await response.text());
         } else {
           // network error in the 4xx–5xx range
-          throw new Error(`${response.status} ${response.statusText}`);
+          throw new Error(`${response.status}: ${response.statusText}`);
         }
         // use response here if we didn't throw above
-      } catch (error) {
-        console.log(error);
+      } catch (ex: any) {
+        this.toaster.error('Exception in handleFileUploadSelection() - ' + ex.message);
       }
     } // for
   } // handleFileUploadSelection
-
-  // ---------------------------------------------------------------------------------------------------
-
-  populateDB(): void {
-    console.log('populateDB()');
-
-    if (!this.dbGlobals.db) {
-      this.displayMessage("The database hasn't been opened/created yet.");
-      console.log('db (i.e., this.dbGlobals.db) is null in populateDB()');
-      return;
-    }
-    // Now that we have a valid database, allow the user to put file(s) in it.
-    this.document.getElementById('fileSelector').style.display = 'block';
-
-    this.displayMessage('Using the below upload button, select one or more files to store in the database.');
-  } // populateDB
 
   // ---------------------------------------------------------------------------------------------------
 
@@ -272,8 +236,7 @@ export class LocalStorage {
     let transaction: IDBTransaction;
 
     if (!db) {
-      this.displayMessage("There's no database to display.");
-      console.log('db (i.e., this.dbGlobals.db) is null in displayDB()');
+      this.toaster.error('Database is null in displayDB()');
       return;
     } // if
 
@@ -283,7 +246,7 @@ export class LocalStorage {
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_ONLY ? IDBTransaction.READ_ONLY : 'readonly');
     } catch (ex: any) {
       // try
-      console.log('db.transaction() exception in displayDB() - ' + ex.message);
+      this.toaster.error('Database transaction exception in displayDB() - ' + ex.message);
       return;
     } // catch
 
@@ -295,12 +258,11 @@ export class LocalStorage {
         const cursorRequest: IDBRequest<IDBCursorWithValue> = objectStore.openCursor(keyRange);
 
         cursorRequest.onerror = (evt: Event | any): void => {
-          console.log('cursorRequest.onerror fired in displayDB() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+          this.toaster.error('cursorRequest.onerror fired in displayDB() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
         };
         // Be aware that if the database is empty, this variable never gets used.
 
         cursorRequest.onsuccess = (evt: Event | any): void => {
-          console.log('cursorRequest.onsuccess fired in displayDB()');
           // Get an object from the object store.
           const cursor = evt.target.result;
 
@@ -312,7 +274,6 @@ export class LocalStorage {
               ...{
                 [cursor.value.ID]: {
                   id: cursor.value.ID,
-                  //date: new Date(cursor.value.date * 1000),
                   date: cursor.value.date,
                   name: cursor.value.name,
                   size: cursor.value.size,
@@ -321,33 +282,32 @@ export class LocalStorage {
                 },
               },
             };
+            this.toaster.info('Item "' + cursor.value.name + '" requested from database.');
             // Move to the next object in the object store.
             cursor.continue();
           } else {
             this.files = Object.values(this.data);
-            this.displayMessage('cursorRequest.onsuccess: Empty file list');
+            this.toaster.success('Finished reading for items, total: ' + this.files.length);
           }
 
           if (this.dbGlobals.empty) {
-            this.displayMessage("The database is empty &ndash; there's nothing to display.");
+            this.toaster.info("The database is empty, there's nothing to display.");
           }
         }; // cursorRequest.onsuccess
       } catch (innerException: any) {
         // inner try
-        console.log('Inner try exception in displayDB() - ' + innerException.message);
+        this.toaster.error('Inner try exception in displayDB() - ' + innerException.message);
       } // inner catch
     } catch (outerException: any) {
       // outer try
-      console.log('Outer try exception in displayDB() - ' + outerException.message);
+      this.toaster.error('Outer try exception in displayDB() - ' + outerException.message);
     } // outer catch
   } // displayDB
 
   // ---------------------------------------------------------------------------------------------------
 
   deleteDB(): void {
-    console.log('deletedDB()');
-    // This normally gets instantly blown away by the next this.displayMessage().
-    this.displayMessage('Your request has been queued.');
+    console.log('deletedDB(): Delete database has been queued...');
 
     try {
       if (this.dbGlobals.db) {
@@ -359,35 +319,31 @@ export class LocalStorage {
       const deleteRequest: IDBOpenDBRequest = this.window.indexedDB.deleteDatabase(this.dbGlobals.name);
 
       deleteRequest.onerror = (evt: Event | any): void => {
-        console.log('deleteRequest.onerror fired in deleteDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        this.toaster.error('deleteRequest.onerror fired in deleteDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
       deleteRequest.onsuccess = (): void => {
         this.dbGlobals.db = null;
         this.dbGlobals.empty = true;
-        this.dbGlobals.message = '';
-        this.displayMessage('The database has been deleted.');
+        this.toaster.success('The database has been deleted.');
         this.data = {};
         this.files = [];
       }; // deleteRequest.onsuccess
     } catch (ex: any) {
       // try
-      console.log('Exception in deleteDB() - ' + ex.message);
+      this.toaster.error('Exception in deleteDB() - ' + ex.message);
     } // catch
   } // deleteDB
 
   // ---------------------------------------------------------------------------------------------------
 
   updateDB(file: any): void {
-    console.log('updateDB()');
-    // This normally gets instantly blown away by the next this.displayMessage().
-    this.displayMessage('Your request has been queued.');
+    console.log('updateDB(): Update database has been queued...');
 
     const db: IDBDatabase = this.dbGlobals.db;
     let transaction: IDBTransaction;
 
     if (!db) {
-      this.displayMessage("There's no database to display.");
-      console.log('db (i.e., this.dbGlobals.db) is null in updateDB()');
+      this.toaster.error('Database is null in updateDB()');
       return;
     } // if
 
@@ -397,7 +353,7 @@ export class LocalStorage {
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
       // try
-      console.log('db.transaction() exception in updateDB() - ' + ex.message);
+      this.toaster.error('Database transaction exception in updateDB() - ' + ex.message);
       return;
     } // catch
 
@@ -413,14 +369,14 @@ export class LocalStorage {
       });
 
       updateRequest.onerror = (evt: Event | any): void => {
-        console.log('updateRequest.onerror fired in updateDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        this.toaster.error('updateRequest.onerror fired in updateDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
       updateRequest.onsuccess = (evt: Event | any): void => {
-        this.displayMessage('Database updated successfully');
+        this.toaster.success('Database updated successfully');
       };
     } catch (ex: any) {
       // try
-      console.log('Exception in updateDB() - ' + ex.message);
+      this.toaster.error('Exception in updateDB() - ' + ex.message);
     } // catch
   } // deleteDB
 }

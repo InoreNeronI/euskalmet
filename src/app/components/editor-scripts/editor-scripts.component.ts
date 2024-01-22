@@ -1,7 +1,7 @@
 import { DOCUMENT, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from './localStorage';
 import { EditorCustomizationsComponent } from '../editor-customizations/editor-customizations.component';
@@ -18,23 +18,28 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   loadingImageElement: HTMLImageElement;
   selectLanguageElement: any;
   // @see https://stackoverflow.com/a/69778692
-  selectedFile: any = { id: 0 };
+  selectedFile: any = null;
 
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
     protected override toaster: ToastrService,
   ) {
     super(document, toaster);
-  } /*
+  }
 
   handleFileDownload(): void {
-    this.handleFileSave();
-    // @see https://stackoverflow.com/a/30800715/16711967
-    const dlAnchorElem: HTMLElement = document.getElementById('downloadScriptButton');
-    dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + this.selectedFile.text);
-    dlAnchorElem.setAttribute('download', this.selectedFile.name);
-    dlAnchorElem.click();
-  }*/
+    if (this.handleFileSelectionSave()) {
+      // @see https://stackoverflow.com/a/30800715/16711967
+      // @see https://stackoverflow.com/a/70518204/16711967
+      const dlAnchorElem: HTMLElement = this.document.createElement('a');
+      dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + encodeURIComponent(this.selectedFile.text));
+      dlAnchorElem.setAttribute('download', this.selectedFile.name);
+      dlAnchorElem.style.display = 'none';
+      this.document.body.appendChild(dlAnchorElem);
+      dlAnchorElem.click();
+      this.document.body.removeChild(dlAnchorElem);
+    }
+  }
 
   handleFileSelection(id: number): void {
     for (let i: number = 0, file: any; (file = this.files[i]); i++) {
@@ -45,17 +50,34 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     }
     const model: editor.ITextModel = editor.getModels()[0];
     editor.setModelLanguage(model, this.selectedFile.type.replace('application/', ''));
-    this.selectLanguageElement.value = model.getLanguageId();
+    const extension = this.selectedFile.name.split('.').pop().toLowerCase();
+    let language: string = model.getLanguageId();
+    if (language === 'plaintext' && extension !== 'txt') {
+      const languagesArray: Array<any> = Object.values(languages.getLanguages());
+      for (let i: number = 0, lang: any; (lang = languagesArray[i]); i++) {
+        if (lang.extensions && lang.extensions.includes('.' + extension)) {
+          language = lang.id;
+          break;
+        }
+      }
+    }
+    editor.setModelLanguage(model, language);
+    this.selectLanguageElement.value = language;
     editor.getEditors()[0].setValue(this.selectedFile.text);
   }
 
-  handleFileSelectionSave(): void {
+  handleFileSelectionSave(): boolean {
+    if (this.selectedFile === null) {
+      this.toaster.error('Please select a file before save');
+      return false;
+    }
     this.selectedFile.date = Date.now();
     this.selectedFile.text = editor.getEditors()[0].getValue();
     this.updateDB(this.selectedFile);
     this.data[this.selectedFile.id].date = this.selectedFile.date;
     this.data[this.selectedFile.id].text = this.selectedFile.text;
     this.files = Object.values(this.data);
+    return true;
   }
 
   handleFilesPurge(): void {
@@ -63,8 +85,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
     this.document.querySelector('#dropdownFilesButton + ul').classList.remove('show');
+    this.selectedFile = null;
     this.openDB();
-    this.populateDB();
   }
 
   handleStart(): void {
@@ -76,10 +98,10 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleStop(): void {
-    this.brandingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
+    this.brandingImageElement.src = 'https://icons.getbootstrap.com/assets/icons/code-slash.svg';
     this.brandingImageElement.parentElement.removeAttribute('disabled');
     this.loadingImageElement.classList.remove('loading-arrow');
-    this.loadingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
+    this.loadingImageElement.src = 'https://icons.getbootstrap.com/assets/icons/code-slash.svg';
     this.loadingImageElement.parentElement.removeAttribute('disabled');
   }
 
@@ -90,7 +112,6 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
       this.selectLanguageElement = this.document.getElementById('language-select');
       this.handleStart();
       this.openDB();
-      this.populateDB();
       this.showData(5000, this.handleStop.bind(this));
       // Add an event listener for the file <input> element so the user can select some files to store in the database:
       this.document.getElementById('fileSelector').addEventListener('change', this.uploadAndShowData.bind(this), false);

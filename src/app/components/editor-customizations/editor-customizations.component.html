@@ -4,7 +4,7 @@
       <select id="language-select" class="form-select w-auto">
         <option *ngFor="let language of codeEditorLanguages" [value]="language.id">{{ language.aliases ? language.aliases[0] : language.id }}</option>
       </select>
-      <label for="language-select">{{ 'Select editor language' | translate }}</label>
+      <label for="language-select">{{ 'SELECT_EDITOR_LANGUAGE' | translate }}</label>
     </div>
   </li>
   <li class="nav-item">
@@ -12,7 +12,7 @@
       <select id="theme-select" class="form-select theme-select w-auto">
         <option *ngFor="let theme of codeEditorThemes" [value]="theme.value">{{ theme.name }}</option>
       </select>
-      <label for="theme-select">{{ 'Select editor theme' | translate }}</label>
+      <label for="theme-select">{{ 'SELECT_EDITOR_THEME' | translate }}</label>
     </div>
   </li>
 </ul>
