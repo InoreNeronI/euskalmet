@@ -14,16 +14,18 @@ import themes from 'monaco-themes/themes/themelist.json';
 export class EditorCustomizationsComponent {
   protected codeEditorLanguages: Array<any>;
   protected codeEditorThemes: Array<any>;
-  protected editor = editor;
 
   constructor(private http: HttpClient) {
     this.codeEditorLanguages = languages.getLanguages();
     const prefix: string = isDevMode() ? '/assets/monaco/themes/' : '/monaco/assets/monaco/themes/';
     for (const [key, value] of Object.entries(themes)) {
-      this.http.get(`${prefix}${value}.json`).subscribe((data: any): void => this.editor.defineTheme(key, data));
+      this.http.get(`${prefix}${value}.json`).subscribe((data: any): void => editor.defineTheme(key, data));
     }
     // @see https://stackoverflow.com/a/40242405/16711967
-    this.codeEditorThemes = Object.entries(themes).map((e: [string, string]): { name: string; value: string } => ({ name: e[1], value: e[0] }));
+    this.codeEditorThemes = Object.entries(themes).map((value: [string, string]): { name: string; value: string } => ({
+      name: value[1],
+      value: value[0],
+    }));
     this.codeEditorThemes.push(
       ...[
         { name: 'High Contrast', value: 'hc-light' },

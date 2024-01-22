@@ -1,15 +1,16 @@
-import { DOCUMENT, NgForOf } from '@angular/common';
+import { DOCUMENT, NgForOf, NgIf } from '@angular/common';
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from './localStorage';
 import { EditorCustomizationsComponent } from '../editor-customizations/editor-customizations.component';
+import { fromEvent, Observable } from 'rxjs';
 
 @Component({
   selector: 'editor-scripts',
   standalone: true,
-  imports: [EditorCustomizationsComponent, TranslateModule, NgForOf],
+  imports: [EditorCustomizationsComponent, NgForOf, NgIf, TranslateModule],
   templateUrl: 'editor-scripts.component.html',
   styleUrl: 'editor-scripts.component.scss',
 })
@@ -25,6 +26,11 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     protected override toaster: ToastrService,
   ) {
     super(document, toaster);
+  }
+
+  handleFileDelete(id: number): void {
+    this.deleteItem(id);
+    this.handleFileSelectionReset();
   }
 
   handleFileDownload(): void {
@@ -73,20 +79,25 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     }
     this.selectedFile.date = Date.now();
     this.selectedFile.text = editor.getEditors()[0].getValue();
-    this.updateDB(this.selectedFile);
-    this.data[this.selectedFile.id].date = this.selectedFile.date;
-    this.data[this.selectedFile.id].text = this.selectedFile.text;
-    this.files = Object.values(this.data);
+    this.updateItem(this.selectedFile);
     return true;
   }
 
-  handleFilesPurge(): void {
-    this.deleteDB();
+  handleFileSelectionReset(): void {
     this.selectLanguageElement.value = 'plaintext';
     editor.getEditors()[0].setValue('');
-    this.document.querySelector('#dropdownFilesButton + ul').classList.remove('show');
     this.selectedFile = null;
-    this.openDB();
+  }
+
+  handleFilesPurge(): void {
+    if (this.dbGlobals.empty) {
+      this.toaster.info("Database is empty, there's nothing to remove.");
+    } else {
+      this.deleteDB();
+      this.handleFileSelectionReset();
+      this.document.querySelector('#dropdownFilesButton + ul').classList.remove('show');
+      this.openDB();
+    }
   }
 
   handleStart(): void {
@@ -98,10 +109,10 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleStop(): void {
-    this.brandingImageElement.src = 'https://icons.getbootstrap.com/assets/icons/code-slash.svg';
+    this.brandingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
     this.brandingImageElement.parentElement.removeAttribute('disabled');
     this.loadingImageElement.classList.remove('loading-arrow');
-    this.loadingImageElement.src = 'https://icons.getbootstrap.com/assets/icons/code-slash.svg';
+    this.loadingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
     this.loadingImageElement.parentElement.removeAttribute('disabled');
   }
 

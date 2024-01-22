@@ -12,16 +12,31 @@
         >
           <img
             class="bi-2x d-inline-block"
-            src="https://icons.getbootstrap.com/assets/icons/code-slash.svg"
+            src="https://material-icons.github.io/material-icons/svg/code/baseline.svg"
             alt="{{ 'FILES' | translate }}"
             title="{{ 'FILES' | translate }}"
           />
         </button>
-        <ul class="dropdown-menu text-center" aria-labelledby="dropdownFilesButton">
+        <ul class="dropdown-menu" aria-labelledby="dropdownFilesButton">
           <li class="nav-item" *ngFor="let file of files">
-            <a class="dropdown-item" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">{{
-              file.name
-            }}</a>
+            <button
+              *ngIf="selectedFile ? selectedFile.id === file.id : false"
+              (click)="handleFileDelete(file.id)"
+              type="button"
+              class="btn btn-link m-0 p-0 position-absolute start-0"
+              id="fileRemover"
+              aria-expanded="false"
+            >
+              <img
+                class="bi d-inline-block p-0"
+                src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
+                alt="{{ 'DELETE_FILE' | translate }}"
+                title="{{ 'DELETE_FILE' | translate }}"
+              />
+            </button>
+            <a class="dropdown-item text-end" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
+              {{ file.name }}
+            </a>
           </li>
         </ul>
       </div>

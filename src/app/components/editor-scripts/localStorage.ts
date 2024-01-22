@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 
 export class LocalStorage {
   protected data: any = {};
-  private dbGlobals: any = {}; // Store all indexedDB related objects in a global object called 'dbGlobals'.
+  protected dbGlobals: any = {}; // Store all indexedDB related objects in a global object called 'dbGlobals'.
   protected document: Document;
   protected files: Array<any> = [];
   protected toaster: ToastrService;
@@ -336,14 +336,14 @@ export class LocalStorage {
 
   // ---------------------------------------------------------------------------------------------------
 
-  updateDB(file: any): void {
-    console.log('updateDB(): Update database has been queued...');
+  deleteItem(id: number): void {
+    console.log('deleteItem(): Delete item has been queued...');
 
     const db: IDBDatabase = this.dbGlobals.db;
     let transaction: IDBTransaction;
 
     if (!db) {
-      this.toaster.error('Database is null in updateDB()');
+      this.toaster.error('Database is null in deleteItem()');
       return;
     } // if
 
@@ -353,7 +353,51 @@ export class LocalStorage {
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
       // try
-      this.toaster.error('Database transaction exception in updateDB() - ' + ex.message);
+      this.toaster.error('Database transaction exception in deleteItem() - ' + ex.message);
+      return;
+    } // catch
+
+    try {
+      const objectStore: IDBObjectStore = transaction.objectStore(this.dbGlobals.storeName);
+      const deleteRequest: IDBRequest = objectStore.delete(id);
+
+      deleteRequest.onerror = (evt: Event | any): void => {
+        this.toaster.error('deleteRequest.onerror fired in deleteItem() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+      };
+      deleteRequest.onsuccess = (): void => {
+        delete this.data[id];
+        this.files = Object.values(this.data);
+        if (this.files.length === 0) {
+          this.dbGlobals.empty = true;
+        }
+        this.toaster.success('File has been deleted successfully');
+      };
+    } catch (ex: any) {
+      // try
+      this.toaster.error('Exception in deleteItem() - ' + ex.message);
+    } // catch
+  } // deleteItem
+
+  // ---------------------------------------------------------------------------------------------------
+
+  updateItem(file: any): void {
+    console.log('updateItem(): Update item has been queued...');
+
+    const db: IDBDatabase = this.dbGlobals.db;
+    let transaction: IDBTransaction;
+
+    if (!db) {
+      this.toaster.error('Database is null in updateItem()');
+      return;
+    } // if
+
+    try {
+      // This is either successful or it throws an exception. Note that the ternary operator is for browsers that only support the READ_ONLY value.
+      // @ts-ignore
+      transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
+    } catch (ex: any) {
+      // try
+      this.toaster.error('Database transaction exception in updateItem() - ' + ex.message);
       return;
     } // catch
 
@@ -369,14 +413,17 @@ export class LocalStorage {
       });
 
       updateRequest.onerror = (evt: Event | any): void => {
-        this.toaster.error('updateRequest.onerror fired in updateDB() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+        this.toaster.error('updateRequest.onerror fired in updateItem() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
-      updateRequest.onsuccess = (evt: Event | any): void => {
-        this.toaster.success('Database updated successfully');
+      updateRequest.onsuccess = (): void => {
+        this.data[file.id].date = file.date;
+        this.data[file.id].text = file.text;
+        this.files = Object.values(this.data);
+        this.toaster.success('File has been updated successfully');
       };
     } catch (ex: any) {
       // try
-      this.toaster.error('Exception in updateDB() - ' + ex.message);
+      this.toaster.error('Exception in updateItem() - ' + ex.message);
     } // catch
-  } // deleteDB
+  } // updateItem
 }
