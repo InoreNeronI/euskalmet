@@ -1,6 +1,6 @@
 import { NgForOf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api';
 import themes from 'monaco-themes/themes/themelist.json';
@@ -18,8 +18,9 @@ export class EditorCustomizationsComponent {
 
   constructor(private http: HttpClient) {
     this.codeEditorLanguages = languages.getLanguages();
+    const prefix: string = isDevMode() ? '/assets/monaco/themes/' : '/monaco/assets/monaco/themes/';
     for (const [key, value] of Object.entries(themes)) {
-      this.http.get(`/assets/monaco/themes/${value}.json`).subscribe((data: any): void => this.editor.defineTheme(key, data));
+      this.http.get(`${prefix}${value}.json`).subscribe((data: any): void => this.editor.defineTheme(key, data));
     }
     // @see https://stackoverflow.com/a/40242405/16711967
     this.codeEditorThemes = Object.entries(themes).map((e: [string, string]): { name: string; value: string } => ({ name: e[1], value: e[0] }));
