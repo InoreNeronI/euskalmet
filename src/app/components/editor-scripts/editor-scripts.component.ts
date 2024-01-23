@@ -5,7 +5,6 @@ import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from './localStorage';
 import { EditorCustomizationsComponent } from '../editor-customizations/editor-customizations.component';
-import { fromEvent, Observable } from 'rxjs';
 
 @Component({
   selector: 'editor-scripts',
@@ -28,8 +27,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     super(document, toaster);
   }
 
-  handleFileDelete(id: number): void {
-    this.deleteItem(id);
+  handleFileDelete(): void {
+    this.deleteItem(this.selectedFile.id);
     this.handleFileSelectionReset();
   }
 

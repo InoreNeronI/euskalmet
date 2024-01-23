@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-lg p-0" role="menu">
   <div class="container-fluid">
-    <div class="main-nav-menu order-0 position-absolute">
+    <div class="main-nav-menu order-0">
       <div class="dropup">
         <button
           type="button"
-          class="btn btn-link d-none m-0 p-0"
+          class="btn btn-link m-0 p-0"
           id="dropdownFilesButton"
           data-bs-auto-close="false"
           data-bs-toggle="dropdown"
@@ -18,37 +18,39 @@
           />
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownFilesButton">
-          <li class="nav-item" *ngFor="let file of files">
+          <li class="d-inline-flex nav-item text-end w-100" *ngFor="let file of files">
             <button
               *ngIf="selectedFile ? selectedFile.id === file.id : false"
-              (click)="handleFileDelete(file.id)"
+              (click)="handleFileDelete()"
               type="button"
-              class="btn btn-link m-0 p-0 position-absolute start-0"
-              aria-expanded="false"
-            >
+              class="btn btn-link m-0 p-0">
               <img
-                class="bi d-inline-block p-0"
+                class="bi-2x d-inline-block p-0"
                 src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
                 alt="{{ 'DELETE_FILE' | translate }}"
                 title="{{ 'DELETE_FILE' | translate }}"
               />
             </button>
-            <a class="dropdown-item text-end" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
+            <a class="dropdown-item rounded" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
               {{ file.name }}
             </a>
+            <button
+              *ngIf="selectedFile ? selectedFile.id === file.id : false"
+              (click)="handleFileSelectionSave()"
+              type="button"
+              class="btn btn-link mx-1 my-0 p-0">
+              <img
+                class="bi-2x d-inline-block p-0"
+                src="https://icons.getbootstrap.com/assets/icons/floppy.svg"
+                alt="{{ 'SAVE_FILE' | translate }}"
+                title="{{ 'SAVE_FILE' | translate }}"
+              />
+            </button>
           </li>
         </ul>
       </div>
     </div>
-    <button type="button" class="btn btn-link m-0 order-1 p-0" id="saveScriptButton" (click)="handleFileSelectionSave()">
-      <img
-        class="bi-2x d-inline-block"
-        src="https://icons.getbootstrap.com/assets/icons/floppy.svg"
-        alt="{{ 'SAVE' | translate }}"
-        title="{{ 'SAVE' | translate }}"
-      />
-    </button>
-    <div class="main-nav-menu order-2">
+    <div class="main-nav-menu order-1">
       <label for="fileSelector" class="btn btn-link form-label m-0 p-0" id="fileSelectorLabel" style="cursor: pointer">
         <img
           class="bi-2x d-inline-block"
@@ -59,7 +61,7 @@
       </label>
       <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-3 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
+    <button type="button" class="btn btn-link m-0 order-2 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
       <img
         class="bi-2x d-inline-block"
         src="https://icons.getbootstrap.com/assets/icons/file-earmark-arrow-down.svg"
@@ -67,7 +69,7 @@
         title="{{ 'DOWNLOAD_SELECTED_FILE' | translate }}"
       />
     </button>
-    <button type="button" class="btn btn-link m-0 order-4 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
+    <button type="button" class="btn btn-link m-0 order-3 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
       <img
         class="bi-2x d-inline-block"
         src="https://icons.getbootstrap.com/assets/icons/trash3.svg"
