@@ -49,7 +49,7 @@ export class LocalStorage {
     } // switch
 
     // @ts-ignore
-    if (!this.document.getElementById('fileSelector').files) {
+    if (!this.document.getElementById('filesSelector').files) {
       this.toaster.error('File API is not fully supported - upgrade your browser to the latest version');
       return false;
     }
@@ -137,11 +137,11 @@ export class LocalStorage {
 
   // ---------------------------------------------------------------------------------------------------
 
-  async handleFileUpload(file: File, text: string): Promise<void> {
+  async handleFilesUpload(file: File, text: string): Promise<void> {
     const db = this.dbGlobals.db;
     let transaction;
     if (!db) {
-      this.toaster.error('Database is null in handleFileUpload()');
+      this.toaster.error('Database is null in handleFilesUpload()');
       return;
     } // if
 
@@ -150,19 +150,18 @@ export class LocalStorage {
       // @ts-ignore
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
-      // try
-      this.toaster.error('Error fired in handleFileUpload() - ' + ex.message);
+      this.toaster.error('Error fired in handleFilesUpload() - ' + ex.message);
       return;
     } // catch
 
     transaction.onerror = (evt: Event | any): void => {
-      this.toaster.error('Error fired in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
+      this.toaster.error('Error fired in handleFilesUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
     };
     transaction.onabort = (): void => {
-      this.toaster.error('Abort fired in handleFileUpload()');
+      this.toaster.error('Abort fired in handleFilesUpload()');
     };
     transaction.oncomplete = (): void => {
-      console.log('transaction.oncomplete fired in handleFileUpload()');
+      console.log('transaction.oncomplete fired in handleFilesUpload()');
     };
 
     try {
@@ -180,24 +179,40 @@ export class LocalStorage {
       // There's at least one object in the database's object store. This info (i.e., this.dbGlobals.empty) is used in displayDB().
       addRequest.onsuccess = (): void => {
         this.dbGlobals.empty = false;
-        console.log('addRequest.onsuccess fired in handleFileUpload()');
+        console.log('addRequest.onsuccess fired in handleFilesUpload()');
       };
       addRequest.onerror = (evt: Event | any): void => {
         this.toaster.error(
-          'Transaction and/or add() exception in handleFileUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode),
+          'Transaction and/or add() exception in handleFilesUpload() - error code: ' + (evt.target.error ? evt.target.error : evt.target.errorCode),
         );
       };
     } catch (ex: any) {
-      // try
-      this.toaster.error('Transaction and/or add() exception in handleFileUpload() - ' + ex.message);
-      return;
+      this.toaster.error('Transaction and/or add() exception in handleFilesUpload() - ' + ex.message);
     } // catch
-  } // handleFileUpload
+  } // handleFilesUpload
 
   // ---------------------------------------------------------------------------------------------------
 
-  async handleFileUploadSelection(evt: Event | any): Promise<void> {
-    console.log('handleFileUploadSelection()');
+  async handleFilesUploadImport(file: File, text: string): Promise<void> {
+    try {
+      const parse = JSON.parse(text);
+      if (Array.isArray(parse)) {
+        for (let i: number = 0, item: any; (item = parse[i]); i++) {
+          item.lastModified = item.date;
+          await this.handleFilesUpload(item, item.text);
+        }
+      } else {
+        this.toaster.error('Failed to import "' + file.name + '" file');
+      }
+    } catch (ex: any) {
+      this.toaster.error('Failed to import "' + file.name + '" file');
+    } // catch
+  } // handleFilesUploadImport
+
+  // ---------------------------------------------------------------------------------------------------
+
+  async handleFilesUploadSelection(evt: Event | any, cb: Function): Promise<void> {
+    console.log('handleFilesUploadSelection()');
     // The files selected by the user (as a FileList object).
     const files = evt.target.files;
     if (!files) {
@@ -217,17 +232,17 @@ export class LocalStorage {
           signal,
         });
         if (response.ok) {
-          await this.handleFileUpload(file, await response.text());
+          await cb(file, await response.text());
         } else {
           // network error in the 4xx–5xx range
           throw new Error(`${response.status}: ${response.statusText}`);
         }
         // use response here if we didn't throw above
       } catch (ex: any) {
-        this.toaster.error('Error fired in handleFileUploadSelection() - ' + ex.message);
+        this.toaster.error('Error fired in handleFilesUploadSelection() - ' + ex.message);
       }
     } // for
-  } // handleFileUploadSelection
+  } // handleFilesUploadSelection
 
   // ---------------------------------------------------------------------------------------------------
 
@@ -247,7 +262,6 @@ export class LocalStorage {
       // @ts-ignore
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_ONLY ? IDBTransaction.READ_ONLY : 'readonly');
     } catch (ex: any) {
-      // try
       this.toaster.error('Database transaction exception in displayDB() - ' + ex.message);
       return;
     } // catch
@@ -326,12 +340,11 @@ export class LocalStorage {
       deleteRequest.onsuccess = (): void => {
         this.dbGlobals.db = null;
         this.dbGlobals.empty = true;
-        this.toaster.warning('The database has been deleted');
         this.data = {};
         this.files = [];
+        this.toaster.warning('The database has been deleted');
       }; // deleteRequest.onsuccess
     } catch (ex: any) {
-      // try
       this.toaster.error('Error fired in deleteDB() - ' + ex.message);
     } // catch
   } // deleteDB
@@ -354,7 +367,6 @@ export class LocalStorage {
       // @ts-ignore
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
-      // try
       this.toaster.error('Error fired in deleteItem() - ' + ex.message);
       return;
     } // catch
@@ -375,7 +387,6 @@ export class LocalStorage {
         }
       };
     } catch (ex: any) {
-      // try
       this.toaster.error('Error fired in deleteItem() - ' + ex.message);
     } // catch
   } // deleteItem
@@ -398,7 +409,6 @@ export class LocalStorage {
       // @ts-ignore
       transaction = db.transaction(this.dbGlobals.storeName, IDBTransaction.READ_WRITE ? IDBTransaction.READ_WRITE : 'readwrite');
     } catch (ex: any) {
-      // try
       this.toaster.error('Error fired in updateItem() - ' + ex.message);
       return;
     } // catch
@@ -424,7 +434,6 @@ export class LocalStorage {
         this.toaster.success('File "' + this.data[file.id].name + '" has been saved');
       };
     } catch (ex: any) {
-      // try
       this.toaster.error('Error fired in updateItem() - ' + ex.message);
     } // catch
   } // updateItem

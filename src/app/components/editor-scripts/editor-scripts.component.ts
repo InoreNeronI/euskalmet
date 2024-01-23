@@ -38,7 +38,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleFileDownload(): void {
-    if (confirm(this.translate.instant('SAVE_BEFORE_DOWNLOAD', { name: this.selectedFile.name }))) {
+    if (this.selectedFileTextChanged() && confirm(this.translate.instant('SAVE_BEFORE_DOWNLOAD', { name: this.selectedFile.name }))) {
       this.handleFileSelectionSave();
     }
     // @see https://stackoverflow.com/a/30800715/16711967
@@ -89,13 +89,12 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleFileSelectionMouseover(evt: Event | any): void {
-    this.translate
-      .get('MODIFIED_AT', {
+    evt.target.setAttribute(
+      'title',
+      this.translate.instant('MODIFIED_AT', {
         date: new Date(this.selectedFile.date).toLocaleString(this.translate.currentLang),
-      })
-      .subscribe((text: string): void => {
-        evt.target.setAttribute('title', text);
-      });
+      }),
+    );
   }
 
   handleFileSelectionMouseout(evt: Event | any): void {
@@ -119,9 +118,23 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     this.selectedFile = null;
   }
 
+  handleFilesExport(): void {
+    if (this.files.length > 0) {
+      const dlAnchorElem: HTMLElement = this.document.createElement('a');
+      dlAnchorElem.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.files)));
+      dlAnchorElem.setAttribute('download', 'monaco.' + Date.now().toString() + '.json');
+      dlAnchorElem.style.display = 'none';
+      this.document.body.appendChild(dlAnchorElem);
+      dlAnchorElem.click();
+      this.document.body.removeChild(dlAnchorElem);
+    } else {
+      this.toaster.info("Database is empty, there's nothing to export");
+    }
+  }
+
   handleFilesPurge(): void {
     if (this.dbGlobals.empty) {
-      this.toaster.info("Database is empty, there's nothing to remove.");
+      this.toaster.info("Database is empty, there's nothing to remove");
     } else {
       this.deleteDB();
       this.handleFileSelectionReset();
@@ -139,11 +152,6 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleStop(): void {
-    /*console.log(this.document.querySelectorAll('[data-bs-toggle="modal"]'));
-    this.document.querySelectorAll('[data-bs-toggle="modal"]').forEach((modal: Element) => {
-      Modal.getOrCreateInstance(modal, { backdrop: false });
-      console.log(modal);
-    });*/
     this.brandingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
     this.brandingImageElement.parentElement.removeAttribute('disabled');
     this.loadingImageElement.classList.remove('loading-arrow');
@@ -160,7 +168,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
       this.openDB();
       this.showData(2500, this.handleStop.bind(this));
       // Add an event listener for the file <input> element so the user can select some files to store in the database:
-      this.document.getElementById('fileSelector').addEventListener('change', this.uploadAndShowData.bind(this), false);
+      this.document.getElementById('filesImport').addEventListener('change', this.uploadAndShowDataImported.bind(this), false);
+      this.document.getElementById('filesSelector').addEventListener('change', this.uploadAndShowData.bind(this), false);
     } else {
       this.document.querySelector('footer').style.display = 'none';
     }
@@ -177,6 +186,11 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
 
   uploadAndShowData(evt: Event | any): void {
     this.handleStart();
-    this.handleFileUploadSelection(evt).then((): void => this.showData(500, this.handleStop.bind(this)));
+    this.handleFilesUploadSelection(evt, this.handleFilesUpload.bind(this)).then((): void => this.showData(500, this.handleStop.bind(this)));
+  }
+
+  uploadAndShowDataImported(evt: Event | any): void {
+    this.handleStart();
+    this.handleFilesUploadSelection(evt, this.handleFilesUploadImport.bind(this)).then((): void => this.showData(500, this.handleStop.bind(this)));
   }
 }

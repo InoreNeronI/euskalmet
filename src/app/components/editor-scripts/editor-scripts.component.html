@@ -12,9 +12,8 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownFilesButton">
           <li class="d-inline-flex nav-item text-end w-100" *ngFor="let file of files">
-            <button type="button" class="btn btn-link fileRemover mx-1 m-0 p-0">
+            <button (click)="handleFileDelete(file.id, file.name)" type="button" class="btn btn-link fileRemover mx-1 m-0 p-0">
               <img
-                (click)="handleFileDelete(file.id, file.name)"
                 class="bi-2x d-inline-block p-0"
                 src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
                 alt="{{ 'DELETE_FILE' | translate: { name: file.name } }}"
@@ -56,7 +55,18 @@
       </div>
     </div>
     <div class="main-nav-menu order-1">
-      <label for="fileSelector" class="btn btn-link form-label m-0 p-0" id="fileSelectorLabel" style="cursor: pointer">
+      <label for="filesImport" class="btn btn-link form-label m-0 p-0" style="cursor: pointer">
+        <img
+          class="bi-2x d-inline-block p-0"
+          src="https://icons.getbootstrap.com/assets/icons/box-arrow-in-up.svg"
+          alt="{{ 'FILES_IMPORT' | translate }}"
+          title="{{ 'FILES_IMPORT' | translate }}"
+        />
+      </label>
+      <input class="d-none form-control form-control-sm ms-lg-5" id="filesImport" multiple type="file" />
+    </div>
+    <div class="main-nav-menu order-2">
+      <label for="filesSelector" class="btn btn-link form-label m-0 p-0" style="cursor: pointer">
         <img
           class="bi-2x d-inline-block p-0"
           src="https://icons.getbootstrap.com/assets/icons/upload.svg"
@@ -64,9 +74,18 @@
           title="{{ 'UPLOAD_FILES' | translate }}"
         />
       </label>
-      <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
+      <input class="d-none form-control form-control-sm ms-lg-5" id="filesSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-2 p-0" data-bs-target="#purgeFilesModal" data-bs-toggle="modal">
+    <button type="button" class="btn btn-link m-0 order-3 p-0">
+      <img
+        (click)="handleFilesExport()"
+        class="bi-2x d-inline-block p-0"
+        src="https://icons.getbootstrap.com/assets/icons/box-arrow-in-down.svg"
+        alt="{{ 'FILES_EXPORT' | translate }}"
+        title="{{ 'FILES_EXPORT' | translate }}"
+      />
+    </button>
+    <button type="button" class="btn btn-link m-0 order-3 p-0" data-bs-target="#purgeFilesModal" data-bs-toggle="modal">
       <img
         class="bi-2x d-inline-block p-0"
         src="https://icons.getbootstrap.com/assets/icons/trash3.svg"
