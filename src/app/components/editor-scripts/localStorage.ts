@@ -169,7 +169,7 @@ export class LocalStorage {
       const objectStore = transaction.objectStore(this.dbGlobals.storeName);
       // The put() method will update an existing record, whereas the add() method won't.
       // @see https://stackoverflow.com/a/30590069/16711967
-      const addRequest = objectStore.add({
+      const addRequest = await objectStore.add({
         name: file.name,
         type: file.type,
         date: file.lastModified,

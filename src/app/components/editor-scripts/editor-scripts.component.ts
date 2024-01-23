@@ -102,8 +102,8 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleFileSelectionSave(): boolean {
-    if (this.selectedFile === null) {
-      this.toaster.error('Please select a file before save');
+    if (!this.selectedFileTextChanged()) {
+      this.toaster.error('Please edit a file before save');
       return false;
     }
     this.selectedFile.date = Date.now();
@@ -166,7 +166,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
       this.selectLanguageElement = this.document.getElementById('language-select');
       this.handleStart();
       this.openDB();
-      this.showData(2500, this.handleStop.bind(this));
+      this.showData(2000, this.handleStop.bind(this));
       // Add an event listener for the file <input> element so the user can select some files to store in the database:
       this.document.getElementById('filesImport').addEventListener('change', this.uploadAndShowDataImported.bind(this), false);
       this.document.getElementById('filesSelector').addEventListener('change', this.uploadAndShowData.bind(this), false);

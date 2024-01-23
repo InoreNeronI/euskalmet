@@ -7,7 +7,7 @@ import './theme';
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-bs-toggle="collapse"]').forEach((collapse) => Collapse.getOrCreateInstance(collapse, {}));
   document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach((dropdown) => Dropdown.getOrCreateInstance(dropdown, {}));
-  setTimeout(() => document.querySelectorAll('[data-bs-toggle="modal"]').forEach((modal) => Modal.getOrCreateInstance(modal, { backdrop: false })), 2500);
+  document.querySelectorAll('[data-bs-toggle="modal"]').forEach((modal) => Modal.getOrCreateInstance(modal, { backdrop: false }));
   // @see https://stackoverflow.com/a/42401686
   const menuBrand = document.querySelector('.navbar-brand');
   const menuFilesCollapse = Dropdown.getOrCreateInstance(document.getElementById('dropdownFilesButton'));
