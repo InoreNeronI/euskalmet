@@ -5,8 +5,9 @@
   "CLOSE": "Cerrar",
   "DARK": "Oscuro",
   "DELETE_FILE": "Borrar fichero \"{{ name }}\"",
+  "DELETE_FILE_ALERT": "¿Borrar fichero \"{{ name }}\"?",
   "DESCRIPTION": "Aplicación de edición de código fuente con diferentes lenguajes y apariencias.",
-  "DOWNLOAD_SELECTED_FILE": "Descargar fichero seleccionado",
+  "DOWNLOAD_FILE": "Descargar fichero \"{{ name }}\"",
   "ENGLISH": "Inglés",
   "FILES": "Ficheros",
   "HOME": "",
@@ -14,11 +15,13 @@
   "LIGHT": "Claro",
   "LOGO": "Logo",
   "MODIFIED_AT": "Actualizado el {{date}}",
-  "PURGE": "Purgar ficheros",
+  "PURGE_FILES": "Purgar fichero(s)",
+  "SAVE_BEFORE_DOWNLOAD": "¿Guardar fichero \"{{ name }}\" antes de descargar?",
+  "SAVE_BEFORE_EXIT": "¿Guardar fichero \"{{ name }}\" antes de salir?",
   "SAVE_FILE": "Guardar fichero \"{{ name }}\"",
   "SELECT_EDITOR_LANGUAGE": "Seleccionar idioma del editor",
   "SELECT_EDITOR_THEME": "Seleccionar apariencia del editor",
   "SPANISH": "Español",
   "TOGGLE_THEME": "Alternar apariencia",
-  "UPLOAD": "Subir fichero(s)"
+  "UPLOAD_FILES": "Subir fichero(s)"
 }

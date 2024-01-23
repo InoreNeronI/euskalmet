@@ -43,6 +43,7 @@
     "@parcel/packager-raw-url": "^2.11.0",
     "@parcel/transformer-sass": "^2.11.0",
     "@parcel/transformer-webmanifest": "^2.11.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "compression-webpack-plugin": "^11.0.0",

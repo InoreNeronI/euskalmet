@@ -4,29 +4,24 @@
       <div class="dropup">
         <button type="button" class="btn btn-link m-0 p-0" id="dropdownFilesButton" data-bs-auto-close="false" data-bs-toggle="dropdown" aria-expanded="false">
           <img
-            class="bi-2x d-inline-block"
-            src="https://material-icons.github.io/material-icons/svg/code/baseline.svg"
+            class="bi-2x d-inline-block p-0"
+            src="https://icons.getbootstrap.com/assets/icons/code-slash.svg"
             alt="{{ 'FILES' | translate }}"
             title="{{ 'FILES' | translate }}"
           />
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownFilesButton">
           <li class="d-inline-flex nav-item text-end w-100" *ngFor="let file of files">
-            <button
-              *ngIf="selectedFile ? selectedFile.id === file.id : false"
-              (click)="handleFileDelete()"
-              type="button"
-              class="btn btn-link mx-1 m-0 p-0"
-              id="fileRemover"
-            >
+            <button type="button" class="btn btn-link fileRemover mx-1 m-0 p-0">
               <img
+                (click)="handleFileDelete(file.id, file.name)"
                 class="bi-2x d-inline-block p-0"
                 src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
                 alt="{{ 'DELETE_FILE' | translate: { name: file.name } }}"
                 title="{{ 'DELETE_FILE' | translate: { name: file.name } }}"
               />
             </button>
-            <a class="dropdown-item rounded" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
+            <a class="dropdown-item me-1 rounded" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
               {{ file.name }}
             </a>
             <button
@@ -43,6 +38,19 @@
                 title="{{ 'SAVE_FILE' | translate: { name: file.name } }}"
               />
             </button>
+            <button
+              *ngIf="selectedFile ? selectedFile.id === file.id : false"
+              (click)="handleFileDownload()"
+              type="button"
+              class="btn btn-link fileDownloader me-1 my-0 p-0"
+            >
+              <img
+                class="bi-2x d-inline-block p-0"
+                src="https://icons.getbootstrap.com/assets/icons/file-earmark-arrow-down.svg"
+                alt="{{ 'DOWNLOAD_FILE' | translate: { name: file.name } }}"
+                title="{{ 'DOWNLOAD_FILE' | translate: { name: file.name } }}"
+              />
+            </button>
           </li>
         </ul>
       </div>
@@ -50,40 +58,33 @@
     <div class="main-nav-menu order-1">
       <label for="fileSelector" class="btn btn-link form-label m-0 p-0" id="fileSelectorLabel" style="cursor: pointer">
         <img
-          class="bi-2x d-inline-block"
+          class="bi-2x d-inline-block p-0"
           src="https://icons.getbootstrap.com/assets/icons/upload.svg"
-          alt="{{ 'UPLOAD' | translate }}"
-          title="{{ 'UPLOAD' | translate }}"
+          alt="{{ 'UPLOAD_FILES' | translate }}"
+          title="{{ 'UPLOAD_FILES' | translate }}"
         />
       </label>
       <input class="d-none form-control form-control-sm ms-lg-5" id="fileSelector" multiple type="file" />
     </div>
-    <button type="button" class="btn btn-link m-0 order-2 p-0" id="downloadScriptButton" (click)="handleFileDownload()">
+    <button type="button" class="btn btn-link m-0 order-2 p-0" data-bs-target="#purgeFilesModal" data-bs-toggle="modal">
       <img
-        class="bi-2x d-inline-block"
-        src="https://icons.getbootstrap.com/assets/icons/file-earmark-arrow-down.svg"
-        alt="{{ 'DOWNLOAD_SELECTED_FILE' | translate }}"
-        title="{{ 'DOWNLOAD_SELECTED_FILE' | translate }}"
-      />
-    </button>
-    <button type="button" class="btn btn-link m-0 order-3 p-0" data-bs-toggle="modal" data-bs-target="#deleteFilesModal" id="deleteFilesButton">
-      <img
-        class="bi-2x d-inline-block"
+        class="bi-2x d-inline-block p-0"
         src="https://icons.getbootstrap.com/assets/icons/trash3.svg"
-        alt="{{ 'PURGE' | translate }}"
-        title="{{ 'PURGE' | translate }}"
+        alt="{{ 'PURGE_FILES' | translate }}"
+        title="{{ 'PURGE_FILES' | translate }}"
       />
     </button>
-    <div class="modal fade" id="deleteFilesModal" tabindex="-1" aria-labelledby="deleteFilesModalLabel" aria-hidden="true">
+    <div class="modal fade" id="purgeFilesModal" role="dialog" tabindex="-1" aria-labelledby="purgeFilesModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title fs-5" id="deleteFilesModalLabel">{{ 'ARE_YOU_SURE' | translate }}</h3>
+            <h3 class="modal-title fs-5" id="purgeFilesModalLabel">{{ 'ARE_YOU_SURE' | translate }}</h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
+          <div class="d-none modal-body"></div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">{{ 'CLOSE' | translate }}</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="handleFilesPurge()">{{ 'PURGE' | translate }}</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="handleFilesPurge()">{{ 'PURGE_FILES' | translate }}</button>
           </div>
         </div>
       </div>

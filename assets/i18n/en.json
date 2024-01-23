@@ -5,8 +5,9 @@
   "CLOSE": "Close",
   "DARK": "Dark",
   "DELETE_FILE": "Delete \"{{ name }}\" file",
+  "DELETE_FILE_ALERT": "Delete \"{{ name }}\" file?",
   "DESCRIPTION": "Code editing application with different languages and themes.",
-  "DOWNLOAD_SELECTED_FILE": "Download \"{{ name }}\" file",
+  "DOWNLOAD_FILE": "Download \"{{ name }}\" file",
   "ENGLISH": "English",
   "FILES": "Files",
   "HOME": "",
@@ -14,11 +15,13 @@
   "LIGHT": "Light",
   "LOGO": "Logo",
   "MODIFIED_AT": "Modified at {{ date }}",
-  "PURGE": "Purge files",
+  "PURGE_FILES": "Purge file(s)",
+  "SAVE_BEFORE_DOWNLOAD": "Save \"{{ name }}\" file before download?",
+  "SAVE_BEFORE_EXIT": "Save \"{{ name }}\" file before exit?",
   "SAVE_FILE": "Save \"{{ name }}\" file",
   "SELECT_EDITOR_LANGUAGE": "Select editor language",
   "SELECT_EDITOR_THEME": "Select editor theme",
   "SPANISH": "Spanish",
   "TOGGLE_THEME": "Toggle theme",
-  "UPLOAD": "Upload file(s)"
+  "UPLOAD_FILES": "Upload file(s)"
 }

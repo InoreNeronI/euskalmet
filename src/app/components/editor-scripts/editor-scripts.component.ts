@@ -28,54 +28,64 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     super(document, toaster);
   }
 
-  handleFileDelete(): void {
-    this.deleteItem(this.selectedFile.id);
-    this.handleFileSelectionReset();
+  handleFileDelete(id: number, name: string): void {
+    if (confirm(this.translate.instant('DELETE_FILE_ALERT', { name }))) {
+      this.deleteItem(id);
+      if (this.selectedFile && this.selectedFile.id === id) {
+        this.handleFileSelectionReset();
+      }
+    }
   }
 
   handleFileDownload(): void {
-    if (this.handleFileSelectionSave()) {
-      // @see https://stackoverflow.com/a/30800715/16711967
-      // @see https://stackoverflow.com/a/70518204/16711967
-      const dlAnchorElem: HTMLElement = this.document.createElement('a');
-      dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + encodeURIComponent(this.selectedFile.text));
-      dlAnchorElem.setAttribute('download', this.selectedFile.name);
-      dlAnchorElem.style.display = 'none';
-      this.document.body.appendChild(dlAnchorElem);
-      dlAnchorElem.click();
-      this.document.body.removeChild(dlAnchorElem);
+    if (confirm(this.translate.instant('SAVE_BEFORE_DOWNLOAD', { name: this.selectedFile.name }))) {
+      this.handleFileSelectionSave();
     }
+    // @see https://stackoverflow.com/a/30800715/16711967
+    // @see https://stackoverflow.com/a/70518204/16711967
+    const dlAnchorElem: HTMLElement = this.document.createElement('a');
+    dlAnchorElem.setAttribute('href', 'data:' + this.selectedFile.type + ';charset=utf-8,' + encodeURIComponent(this.selectedFile.text));
+    dlAnchorElem.setAttribute('download', this.selectedFile.name);
+    dlAnchorElem.style.display = 'none';
+    this.document.body.appendChild(dlAnchorElem);
+    dlAnchorElem.click();
+    this.document.body.removeChild(dlAnchorElem);
   }
 
   handleFileSelection(id: number): void {
-    for (let i: number = 0, file: any; (file = this.files[i]); i++) {
-      if (file.id === id) {
-        this.selectedFile = file;
-        break;
+    if (!this.selectedFile || this.selectedFile.id !== id) {
+      if (this.selectedFileTextChanged() && confirm(this.translate.instant('SAVE_BEFORE_EXIT', { name: this.selectedFile.name }))) {
+        this.handleFileSelectionSave();
       }
-    }
-    const model: editor.ITextModel = editor.getModels()[0];
-    editor.setModelLanguage(model, this.selectedFile.type.replace('application/', ''));
-    const extension = this.selectedFile.name.split('.').pop().toLowerCase();
-    let language: string = model.getLanguageId();
-    if (language === 'plaintext' && extension !== 'txt') {
-      const languagesArray: Array<any> = Object.values(languages.getLanguages());
-      for (let i: number = 0, lang: any; (lang = languagesArray[i]); i++) {
-        if (lang.extensions && lang.extensions.includes('.' + extension)) {
-          language = lang.id;
+      for (let i: number = 0, file: any; (file = this.files[i]); i++) {
+        if (file.id === id) {
+          this.selectedFile = file;
           break;
         }
       }
+      const model: editor.ITextModel = editor.getModels()[0];
+      editor.setModelLanguage(model, this.selectedFile.type.replace('application/', ''));
+      const extension: string = this.selectedFile.name.split('.').pop().toLowerCase();
+      let language: string = model.getLanguageId();
+      if (language === 'plaintext' && extension !== 'txt') {
+        const languagesArray: Array<any> = Object.values(languages.getLanguages());
+        for (let i: number = 0, lang: any; (lang = languagesArray[i]); i++) {
+          if (lang.extensions && lang.extensions.includes('.' + extension)) {
+            language = lang.id;
+            break;
+          }
+        }
+      }
+      editor.setModelLanguage(model, language);
+      this.selectLanguageElement.value = language;
+      editor.getEditors()[0].setValue(this.selectedFile.text);
+      setTimeout((): void => {
+        const selectedFileElement: HTMLElement = this.document.querySelector('#dropdownFilesButton + .dropdown-menu .active');
+        selectedFileElement.addEventListener('mouseover', (evt: Event | any) => this.handleFileSelectionMouseover(evt), false);
+        selectedFileElement.addEventListener('mouseout', (evt: Event | any) => this.handleFileSelectionMouseout(evt), false);
+        selectedFileElement.dispatchEvent(new Event('mouseover'));
+      }, 500);
     }
-    editor.setModelLanguage(model, language);
-    this.selectLanguageElement.value = language;
-    editor.getEditors()[0].setValue(this.selectedFile.text);
-    setTimeout((): void => {
-      const selectedFileElement: HTMLElement = this.document.querySelector('#dropdownFilesButton + .dropdown-menu .active');
-      selectedFileElement.addEventListener('mouseover', (evt: Event | any) => this.handleFileSelectionMouseover(evt), false);
-      selectedFileElement.addEventListener('mouseout', (evt: Event | any) => this.handleFileSelectionMouseout(evt), false);
-      selectedFileElement.dispatchEvent(new Event('mouseover'));
-    }, 500);
   }
 
   handleFileSelectionMouseover(evt: Event | any): void {
@@ -129,10 +139,15 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   }
 
   handleStop(): void {
+    /*console.log(this.document.querySelectorAll('[data-bs-toggle="modal"]'));
+    this.document.querySelectorAll('[data-bs-toggle="modal"]').forEach((modal: Element) => {
+      Modal.getOrCreateInstance(modal, { backdrop: false });
+      console.log(modal);
+    });*/
     this.brandingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
     this.brandingImageElement.parentElement.removeAttribute('disabled');
     this.loadingImageElement.classList.remove('loading-arrow');
-    this.loadingImageElement.src = 'https://material-icons.github.io/material-icons/svg/code/baseline.svg';
+    this.loadingImageElement.src = 'https://icons.getbootstrap.com/assets/icons/code-slash.svg';
     this.loadingImageElement.parentElement.removeAttribute('disabled');
   }
 
@@ -143,12 +158,16 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
       this.selectLanguageElement = this.document.getElementById('language-select');
       this.handleStart();
       this.openDB();
-      this.showData(5000, this.handleStop.bind(this));
+      this.showData(2500, this.handleStop.bind(this));
       // Add an event listener for the file <input> element so the user can select some files to store in the database:
       this.document.getElementById('fileSelector').addEventListener('change', this.uploadAndShowData.bind(this), false);
     } else {
       this.document.querySelector('footer').style.display = 'none';
     }
+  }
+
+  selectedFileTextChanged(): boolean {
+    return this.selectedFile && this.selectedFile.text !== editor.getEditors()[0].getValue();
   }
 
   showData(timeout: number, cb: Function): void {

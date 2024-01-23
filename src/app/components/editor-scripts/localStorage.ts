@@ -326,7 +326,7 @@ export class LocalStorage {
       deleteRequest.onsuccess = (): void => {
         this.dbGlobals.db = null;
         this.dbGlobals.empty = true;
-        this.toaster.success('The database has been deleted');
+        this.toaster.warning('The database has been deleted');
         this.data = {};
         this.files = [];
       }; // deleteRequest.onsuccess
@@ -367,7 +367,7 @@ export class LocalStorage {
         this.toaster.error('deleteRequest.onerror fired in deleteItem() - ' + (evt.target.error ? evt.target.error : evt.target.errorCode));
       };
       deleteRequest.onsuccess = (): void => {
-        this.toaster.success('File "' + this.data[id].name + '" has been deleted successfully');
+        this.toaster.warning('File "' + this.data[id].name + '" has been deleted');
         delete this.data[id];
         this.files = Object.values(this.data);
         if (this.files.length === 0) {
@@ -421,7 +421,7 @@ export class LocalStorage {
         this.data[file.id].date = file.date;
         this.data[file.id].text = file.text;
         this.files = Object.values(this.data);
-        this.toaster.success('File "' + this.data[file.id].name + '" has been saved successfully');
+        this.toaster.success('File "' + this.data[file.id].name + '" has been saved');
       };
     } catch (ex: any) {
       // try
