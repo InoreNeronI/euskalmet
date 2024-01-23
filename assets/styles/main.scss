@@ -61,6 +61,12 @@ main {
   .btn-link:hover {
     background-color: var(--bs-secondary-bg);
   }
+  // Particles canvas
+  .canvas-background {
+    position: absolute;
+    z-index: -1;
+  }
+  // Header
   header {
     .color-modes {
       .dropdown-menu {
@@ -89,20 +95,15 @@ main {
       box-shadow: 0 0 0 1.5px;
     }
   }
-
-  // Particles canvas
+  // Editor
   section {
-    .canvas-background {
-      position: absolute;
-      z-index: -1;
-    }
     .container {
-      display: flex;
       position: relative;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       height: 100%;
     }
+  }
+  // Footer
+  footer nav {
+    background-image: none !important;
   }
 }

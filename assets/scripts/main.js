@@ -26,9 +26,9 @@ window.addEventListener('DOMContentLoaded', () => {
   menuToggle.addEventListener('show.bs.collapse', () => {
     menuBrand.style.alignSelf = 'start';
     menuBrand.style.position = 'absolute';
-    menuBrand.style.top = '0.4rem';
+    menuBrand.style.top = '0.1rem';
     menuToggler.style.position = 'absolute';
     menuToggler.style.right = '0.75rem';
-    menuToggler.style.top = '0.6rem';
+    menuToggler.style.top = '0.4rem';
   });
 });
