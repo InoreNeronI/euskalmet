@@ -1,6 +1,6 @@
 import { DOCUMENT, NgForOf, NgIf } from '@angular/common';
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorage } from './localStorage';
@@ -23,6 +23,7 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
     protected override toaster: ToastrService,
+    private translate: TranslateService,
   ) {
     super(document, toaster);
   }
@@ -69,6 +70,26 @@ export class EditorScriptsComponent extends LocalStorage implements AfterViewIni
     editor.setModelLanguage(model, language);
     this.selectLanguageElement.value = language;
     editor.getEditors()[0].setValue(this.selectedFile.text);
+    setTimeout((): void => {
+      const selectedFileElement: HTMLElement = this.document.querySelector('#dropdownFilesButton + .dropdown-menu .active');
+      selectedFileElement.addEventListener('mouseover', (evt: Event | any) => this.handleFileSelectionMouseover(evt), false);
+      selectedFileElement.addEventListener('mouseout', (evt: Event | any) => this.handleFileSelectionMouseout(evt), false);
+      selectedFileElement.dispatchEvent(new Event('mouseover'));
+    }, 500);
+  }
+
+  handleFileSelectionMouseover(evt: Event | any): void {
+    this.translate
+      .get('MODIFIED_AT', {
+        date: new Date(this.selectedFile.date).toLocaleString(this.translate.currentLang),
+      })
+      .subscribe((text: string): void => {
+        evt.target.setAttribute('title', text);
+      });
+  }
+
+  handleFileSelectionMouseout(evt: Event | any): void {
+    evt.target.removeAttribute('title');
   }
 
   handleFileSelectionSave(): boolean {

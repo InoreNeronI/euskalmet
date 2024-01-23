@@ -2,14 +2,7 @@
   <div class="container-fluid">
     <div class="main-nav-menu order-0">
       <div class="dropup">
-        <button
-          type="button"
-          class="btn btn-link m-0 p-0"
-          id="dropdownFilesButton"
-          data-bs-auto-close="false"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
+        <button type="button" class="btn btn-link m-0 p-0" id="dropdownFilesButton" data-bs-auto-close="false" data-bs-toggle="dropdown" aria-expanded="false">
           <img
             class="bi-2x d-inline-block"
             src="https://material-icons.github.io/material-icons/svg/code/baseline.svg"
@@ -23,12 +16,14 @@
               *ngIf="selectedFile ? selectedFile.id === file.id : false"
               (click)="handleFileDelete()"
               type="button"
-              class="btn btn-link m-0 p-0">
+              class="btn btn-link mx-1 m-0 p-0"
+              id="fileRemover"
+            >
               <img
                 class="bi-2x d-inline-block p-0"
                 src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
-                alt="{{ 'DELETE_FILE' | translate }}"
-                title="{{ 'DELETE_FILE' | translate }}"
+                alt="{{ 'DELETE_FILE' | translate: { name: file.name } }}"
+                title="{{ 'DELETE_FILE' | translate: { name: file.name } }}"
               />
             </button>
             <a class="dropdown-item rounded" [class.active]="selectedFile ? selectedFile.id === file.id : false" (click)="handleFileSelection(file.id)">
@@ -38,12 +33,14 @@
               *ngIf="selectedFile ? selectedFile.id === file.id : false"
               (click)="handleFileSelectionSave()"
               type="button"
-              class="btn btn-link mx-1 my-0 p-0">
+              class="btn btn-link mx-1 my-0 p-0"
+              id="fileSaver"
+            >
               <img
                 class="bi-2x d-inline-block p-0"
                 src="https://icons.getbootstrap.com/assets/icons/floppy.svg"
-                alt="{{ 'SAVE_FILE' | translate }}"
-                title="{{ 'SAVE_FILE' | translate }}"
+                alt="{{ 'SAVE_FILE' | translate: { name: file.name } }}"
+                title="{{ 'SAVE_FILE' | translate: { name: file.name } }}"
               />
             </button>
           </li>

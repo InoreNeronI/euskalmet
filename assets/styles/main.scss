@@ -58,6 +58,9 @@ main {
     height: 2.3333rem;
     fill: currentcolor;
   }
+  .btn-link:hover {
+    background-color: var(--bs-secondary-bg);
+  }
   header {
     .color-modes {
       .dropdown-menu {
