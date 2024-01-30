@@ -45,7 +45,7 @@
                 "output": "assets/monaco/themes"
               }
             ],
-            "styles": ["node_modules/monaco-editor/min/vs/editor/editor.main.css"],
+            "styles": [],
             "scripts": [],
             "customWebpackConfig": {
               "path": "webpack.config.ts",
@@ -134,7 +134,7 @@
                 "output": "assets/monaco/themes"
               }
             ],
-            "styles": ["node_modules/monaco-editor/min/vs/editor/editor.main.css"],
+            "styles": [],
             "scripts": []
           }
         }
