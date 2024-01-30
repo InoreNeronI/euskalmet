@@ -1,25 +1,24 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, ViewChild } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { EditorComponent } from './components/editor/editor.component';
-import { EditorCustomizationsComponent } from './components/editor-customizations/editor-customizations.component';
+import { CitiesComponent } from './components/cities/cities.component';
 import { Particles } from './particles';
 import { ParticlesDirective } from './particles.directive';
-import { EditorScriptsComponent } from './components/editor-scripts/editor-scripts.component';
+import { SeaComponent } from './components/sea/sea.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, EditorComponent, EditorCustomizationsComponent, EditorScriptsComponent, ParticlesDirective, TranslateModule],
+  imports: [CitiesComponent, CommonModule, ParticlesDirective, SeaComponent, TranslateModule],
   templateUrl: 'app.component.html',
 })
 export class AppComponent extends Particles implements AfterViewInit {
-  // @see https://www.digitalocean.com/community/tutorials/angular-viewchild-access-component-es
   canvasParticlesElement: HTMLCanvasElement;
   languages: string[] = ['en', 'es', 'eu'];
   title: string = 'monaco';
 
+  // @see https://www.digitalocean.com/community/tutorials/angular-viewchild-access-component-es
   @ViewChild(ParticlesDirective)
   set particlesElement(directive: ParticlesDirective) {
     this.canvasParticlesElement = directive.element;

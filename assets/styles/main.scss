@@ -16,6 +16,13 @@
         filter: invert(1);
       }
     }
+    // Forecast
+    .forecast {
+      > .forecast-arrows,
+      > .forecast-detail {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+      }
+    }
   } /*
     &[data-bs-theme='auto'] {
   } */
@@ -27,6 +34,13 @@
     .nav-link {
       img {
         filter: invert(0);
+      }
+    }
+    // Forecast
+    .forecast {
+      > .forecast-arrows,
+      > .forecast-detail {
+        background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6));
       }
     }
   }
@@ -65,6 +79,17 @@ main {
   .canvas-background {
     position: absolute;
     z-index: -1;
+  }
+  // Forecast
+  .forecast > .forecast-detail {
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    padding: 0.15rem 0.25rem 0.25rem;
+    width: 100%;
+    text-align: center;
+    .span {
+      width: 100%;
+    }
   }
   // Header
   header {

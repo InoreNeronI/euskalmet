@@ -1,0 +1,31 @@
+.forecast {
+  position: relative;
+  width: 437px;
+  height: 436px;
+  > .forecast-arrows {
+    display: flex;
+    position: absolute;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    padding: 0.25rem 0.15rem 0.15rem;
+    width: 100%;
+    * {
+      opacity: 0.6;
+      font-size: 0.85rem;
+      letter-spacing: 0.1rem;
+    }
+    a {
+      &:focus,
+      &:hover {
+        transform: translate(0.125rem, 0.125rem);
+      }
+      &:active {
+        transform: translate(0.25rem, 0.25rem);
+      }
+    }
+  }
+}

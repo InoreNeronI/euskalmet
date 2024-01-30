@@ -27,7 +27,7 @@
           <img class="bi-3x d-inline-block" src="https://material-icons.github.io/material-icons/svg/code/baseline.svg" alt="{{ 'LOGO' | translate }}" />
           {{ 'HOME' | translate }}
         </button>
-        <editor-customizations class="collapse navbar-collapse main-nav-menu order-1" id="navbarContent"></editor-customizations>
+        <!--<editor-customizations class="collapse navbar-collapse main-nav-menu order-1" id="navbarContent"></editor-customizations>-->
         <div class="main-nav-menu order-2">
           <div class="dropdown">
             <button
@@ -52,6 +52,9 @@
               </li>
               <li *ngIf="!isLang('eu')">
                 <a class="dropdown-item" (click)="changeLang('eu')">{{ 'BASQUE' | translate }}</a>
+              </li>
+              <li *ngIf="!isLang('fr')">
+                <a class="dropdown-item" (click)="changeLang('fr')">{{ 'FRENCH' | translate }}</a>
               </li>
             </ul>
           </div>
@@ -94,7 +97,7 @@
             </ul>
           </div>
         </div>
-        <button
+        <!--<button
           class="navbar-toggler order-3"
           type="button"
           data-bs-toggle="collapse"
@@ -103,14 +106,15 @@
           aria-expanded="false"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
+        </button>-->
       </div>
     </nav>
   </header>
   <section class="d-flex flex-fill justify-content-center align-items-center">
-    <editor class="container"></editor>
+    <!--<editor class="container"></editor>-->
+    <cities [now]=""></cities>
   </section>
   <footer>
-    <editor-scripts></editor-scripts>
+    <sea [now]=""></sea>
   </footer>
 </main>

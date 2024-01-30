@@ -1,0 +1,71 @@
+// @see https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+@mixin word-wrap() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+}
+
+// @see https://codepen.io/elharony/pen/bWEbgm
+
+.slider {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; /*
+  width: 100%;
+  height: 100%;*/
+  margin: 0 auto;
+  overflow: hidden; /* To hide other slides */
+  .slider-container {
+    width: 600%; /* Calculate it like that: How many slides do you have * 100%  => for example: here we have 3 slides so it would be 300%, if you added an extra slide, increase it to 400%, and so on */
+    height: inherit;
+    small {
+      @include word-wrap;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      float: left;
+      width: 16.666666667%;
+      height: inherit;
+      &.animate {
+        /* Note: if you replace "infinite" value with a numeric value like "2,3, .. etc" the animation will stop after that repetition. I recommend to leave it infinite to keep looping. */
+        animation: slideEffect 36s ease infinite; /* Feel free to manipulate with the values [ Duration, Timing-function ] */
+        animation-delay: 3s;
+      }
+      span {
+        font-weight: normal;
+        line-height: 1rem;
+      }
+    }
+  }
+}
+
+@keyframes slideEffect {
+  0% {
+    transform: translatex(0);
+  }
+  20% {
+    transform: translatex(-100%); /* Write the fifth part value of 100% { transaltex() } below */
+  }
+  40% {
+    transform: translatex(-200%); /* Write the two-fifth part value of 100% { transaltex() } below */
+  }
+  60% {
+    transform: translatex(-300%); /* Write the three-fifth part value of 100% { transaltex() } below */
+  }
+  80% {
+    transform: translatex(-400%); /* Write the four-fifth part value of 100% { transaltex() } below */
+  }
+  100% {
+    left: 0;
+    transform: translatex(
+      -500%
+    ); /* To calculate it, use this equation: ( How many slides * 100% ) - 100%. For example: here we have 3 slides, so it would be: ( 3 * 100% ) - 100% = 200% as you notice */
+  }
+}

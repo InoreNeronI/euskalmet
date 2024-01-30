@@ -11,7 +11,7 @@ export class LazyTranslateLoader implements TranslateLoader {
   constructor(
     private http: HttpClient,
     // @see https://stackoverflow.com/a/67717547/16711967
-    private prefix: string = isDevMode() ? '/assets/i18n/' : '/monaco/assets/i18n/',
+    private prefix: string = isDevMode() ? '/assets/i18n/' : '/euskalmet/assets/i18n/',
     private suffix: string = '.json',
   ) {}
 
