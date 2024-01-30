@@ -16,7 +16,7 @@ import { SeaComponent } from './components/sea/sea.component';
 export class AppComponent extends Particles implements AfterViewInit {
   canvasParticlesElement: HTMLCanvasElement;
   languages: string[] = ['en', 'es', 'eu'];
-  title: string = 'monaco';
+  title: string = 'euskalmet';
 
   // @see https://www.digitalocean.com/community/tutorials/angular-viewchild-access-component-es
   @ViewChild(ParticlesDirective)

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "monaco": {
+    "euskalmet": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -38,11 +38,6 @@
                 "glob": "**/*.*",
                 "input": "assets/images",
                 "output": "assets/images"
-              },
-              {
-                "glob": "*.json",
-                "input": "node_modules/monaco-themes/themes",
-                "output": "assets/monaco/themes"
               }
             ],
             "styles": [],
@@ -92,10 +87,10 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "monaco:build:production"
+              "buildTarget": "euskalmet:build:production"
             },
             "development": {
-              "buildTarget": "monaco:build:development"
+              "buildTarget": "euskalmet:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,7 +98,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "monaco:build"
+            "buildTarget": "euskalmet:build"
           }
         },
         "test": {
@@ -127,11 +122,6 @@
                 "glob": "**/*.*",
                 "input": "assets/images",
                 "output": "assets/images"
-              },
-              {
-                "glob": "*.json",
-                "input": "node_modules/monaco-themes/themes",
-                "output": "assets/monaco/themes"
               }
             ],
             "styles": [],
