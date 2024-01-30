@@ -65,7 +65,7 @@ export class Translate {
           );
         }
       } else {
-        console.log(key + ' is empty.');
+        console.error(key + ' is empty.');
       }
     });
 

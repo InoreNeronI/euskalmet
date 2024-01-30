@@ -14,9 +14,10 @@ import { SeaComponent } from './components/sea/sea.component';
   templateUrl: 'app.component.html',
 })
 export class AppComponent extends Particles implements AfterViewInit {
-  canvasParticlesElement: HTMLCanvasElement;
-  languages: string[] = ['en', 'es', 'eu', 'fr'];
-  title: string = 'euskalmet';
+  private canvasParticlesElement: HTMLCanvasElement;
+  private languages: string[] = ['en', 'es', 'eu', 'fr'];
+  protected now: number = 0;
+  private title: string = 'euskalmet';
 
   // @see https://www.digitalocean.com/community/tutorials/angular-viewchild-access-component-es
   @ViewChild(ParticlesDirective)
@@ -26,6 +27,10 @@ export class AppComponent extends Particles implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.drawParticles(this.canvasParticlesElement, this.canvasParticlesElement.parentElement);
+  }
+
+  nowAssign(now: number): void {
+    this.now = now;
   }
 
   constructor(

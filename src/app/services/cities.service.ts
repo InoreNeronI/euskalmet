@@ -146,7 +146,5 @@ export class CitiesService extends Translate {
       this.intervals.forEach((interval: number): void => clearInterval(interval));
       this.intervals.push(setInterval(() => cbs_run(), 5000 * descriptions.length));
     });
-
-    console.log(this.data, this.icons, this.texts);
   }
 }

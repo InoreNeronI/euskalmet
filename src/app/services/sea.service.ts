@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
 import { Translate } from './translate';
 
@@ -64,27 +64,10 @@ export class SeaService extends Translate {
         });
       })
       .catch((error: any) => console.error(error));
-  } /*
-
-    let date: Date = new Date();
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'numeric',
-      day: 'numeric',
-      year: '2-digit',
-    };
-    glob.now = 'today';
-    glob.today = date.toLocaleDateString('en', options);
-    date.setDate(date.getDate() + 1);
-    glob.tomorrow = date.toLocaleString('en', options);
-    date.setDate(date.getDate() + 1);
-    glob.next = date.toLocaleString('en', options);
-
-    console.log(glob.now, glob.today, glob.tomorrow, glob.next);*/
+  }
 
   async getSeaForecastTranslate(item: number): Promise<any> {
     await this.translateText(item).then((): void => {
-      /*if (this.days.hasOwnProperty(glob.now)) {
-          const data = this.days[glob.now]['data'];*/
       document
         .querySelector('.navbar-brand')
         .setAttribute(
@@ -169,23 +152,7 @@ export class SeaService extends Translate {
       // @see https://medium.com/better-programming/how-to-restart-a-css-animation-with-javascript-and-what-is-the-dom-reflow-a86e8b6df00f
       sliderItems.forEach((item: any): void => {
         item.classList.add('animate');
-        /*Array.from(item.querySelectorAll('i')).forEach((icon: any): void => {
-            htmlEl.className = 'tooltip';
-            htmlEl.textContent = icon.getAttribute('title');
-            htmlEl.style.fontSize = '0.65rem';
-            htmlEl.style.position = 'absolute';
-            htmlEl.style.top = '5%';
-            htmlEl.style.visibility = 'hidden';
-            icon.insertAdjacentHTML('beforeend', htmlEl.outerHTML);
-            setTimeout((): string => (icon.querySelector('.tooltip').style.visibility = 'visible'), 3250);
-          });*/
-      }); /*
-        } else {
-            errorEl.className = 'warning';
-            errorEl.textContent = this.translate.instant('NO_DATA;
-        }*/
+      });
     });
-
-    console.log(this.data, this.icons, this.texts);
   }
 }

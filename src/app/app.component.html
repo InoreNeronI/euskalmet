@@ -112,9 +112,9 @@
   </header>
   <section class="d-flex flex-fill justify-content-center align-items-center">
     <!--<editor class="container"></editor>-->
-    <cities [now]=""></cities>
+    <cities [now]="now" (nowEvent)="nowAssign($event)"></cities>
   </section>
   <footer>
-    <sea [now]=""></sea>
+    <sea [now]="now"></sea>
   </footer>
 </main>
