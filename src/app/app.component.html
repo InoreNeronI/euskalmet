@@ -27,7 +27,6 @@
           <img class="bi-3x d-inline-block" src="https://material-icons.github.io/material-icons/svg/code/baseline.svg" alt="{{ 'LOGO' | translate }}" />
           {{ 'HOME' | translate }}
         </button>
-        <!--<editor-customizations class="collapse navbar-collapse main-nav-menu order-1" id="navbarContent"></editor-customizations>-->
         <div class="main-nav-menu order-2">
           <div class="dropdown">
             <button
@@ -97,22 +96,12 @@
             </ul>
           </div>
         </div>
-        <!--<button
-          class="navbar-toggler order-3"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>-->
       </div>
     </nav>
   </header>
-  <section class="d-flex flex-fill justify-content-center align-items-center">
-    <!--<editor class="container"></editor>-->
+  <section class="d-flex flex-column flex-fill justify-content-center align-items-center">
     <cities [now]="now" (nowEvent)="nowAssign($event)"></cities>
+    <areas [now]="now"></areas>
   </section>
   <footer>
     <sea [now]="now"></sea>

@@ -1,0 +1,33 @@
+<ul class="nav nav-tabs">
+  <li class="nav-item" *ngFor="let area of areasService.data[now]">
+    <button
+      (click)="setCurrentNav(area['areaId'])"
+      [class.active]="selectedTab === area['areaId']"
+      class="nav-link"
+      data-bs-toggle="tab"
+      [attr.data-bs-target]="'#nav-' + area['areaId']"
+      type="button"
+      [attr.aria-controls]="'#nav-' + area['areaId']"
+    >
+      {{ area['areaDescription'][areasService.lang] }}
+    </button>
+  </li>
+</ul>
+<div class="border-bottom border-end border-start tab-content">
+  <div
+    [class.active]="selectedTab === area['areaId']"
+    [class.show]="selectedTab === area['areaId']"
+    class="tab-pane fade text-center"
+    id="{{ 'nav-' + area['areaId'] }}"
+    [attr.aria-labelledby]="area['areaDescription'][areasService.lang]"
+    *ngFor="let area of areasService.data[now]"
+  >
+    <p>{{ area['forecastDescription'][areasService.lang] }}</p>
+    <img src="{{ area['tempIcon'] }}" />
+    <p>{{ area['tempIconDescription'][areasService.lang] }}</p>
+    <img src="{{ area['weatherIcon'] }}" />
+    <p>{{ area['weatherIconDescription'][areasService.lang] }}</p>
+    <img src="{{ area['windIcon'] }}" />
+    <p>{{ area['windIconDescription'][areasService.lang] }}</p>
+  </div>
+</div>

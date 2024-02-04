@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
 import { LangChangeEvent, TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -7,7 +8,7 @@ import { LangChangeEvent, TranslateModule, TranslateService } from '@ngx-transla
   standalone: true,
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.scss',
-  imports: [TranslateModule],
+  imports: [NgIf, TranslateModule],
 })
 export class CitiesComponent implements OnChanges, OnInit {
   @Input() public now: number;

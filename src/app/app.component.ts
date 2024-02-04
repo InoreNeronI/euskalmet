@@ -6,11 +6,12 @@ import { CitiesComponent } from './components/cities/cities.component';
 import { Particles } from './particles';
 import { ParticlesDirective } from './particles.directive';
 import { SeaComponent } from './components/sea/sea.component';
+import { AreasComponent } from './components/areas/areas.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CitiesComponent, CommonModule, ParticlesDirective, SeaComponent, TranslateModule],
+  imports: [AreasComponent, CitiesComponent, CommonModule, ParticlesDirective, SeaComponent, TranslateModule],
   templateUrl: 'app.component.html',
 })
 export class AppComponent extends Particles implements AfterViewInit {
