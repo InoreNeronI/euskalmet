@@ -23,11 +23,8 @@
     *ngFor="let area of areasService.data[now]"
   >
     <p>{{ area['forecastDescription'][areasService.lang] }}</p>
-    <img src="{{ area['tempIcon'] }}" />
-    <p>{{ area['tempIconDescription'][areasService.lang] }}</p>
-    <img src="{{ area['weatherIcon'] }}" />
-    <p>{{ area['weatherIconDescription'][areasService.lang] }}</p>
-    <img src="{{ area['windIcon'] }}" />
-    <p>{{ area['windIconDescription'][areasService.lang] }}</p>
+    <p><img class="img-thumbnail" src="{{ area['tempIcon'] }}" /> {{ area['tempIconDescription'][areasService.lang] }}</p>
+    <p><img class="img-thumbnail" src="{{ area['weatherIcon'] }}" /> {{ area['weatherIconDescription'][areasService.lang] }}</p>
+    <p><img class="img-thumbnail" src="{{ area['windIcon'] }}" /> {{ area['windIconDescription'][areasService.lang] }}</p>
   </div>
 </div>
