@@ -1,6 +1,8 @@
 {
+  "AFTER": "Día siguiente",
   "AUTO": "Automático",
   "BASQUE": "Euskera",
+  "BEFORE": "Día anterior",
   "DARK": "Oscuro",
   "DENIED": "Rechazó la solicitud de geolocalización.",
   "DESCRIPTION": "Aplicación sobre la predicción meteorológica en Euskal Herria.",

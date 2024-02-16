@@ -1,6 +1,8 @@
 {
+  "AFTER": "Hurrengo eguna",
   "AUTO": "Automatikoa",
   "BASQUE": "Euskara",
+  "BEFORE": "Aurreko eguna",
   "DARK": "Iluna",
   "DENIED": "Ukatu egin duzu Geolokalizazio eskaera.",
   "DESCRIPTION": "Euskal Herrian eguraldia iragartzeko aplikazioa.",
